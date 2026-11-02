@@ -6,6 +6,10 @@ using MovieTicketBooking.Repositories.Interfaces;
 using MovieTicketBooking.Services;
 using MovieTicketBooking.Services.Interfaces;
 using Scalar.AspNetCore;
+using Microsoft.AspNetCore.Identity;
+using MovieTicketBooking.Models;
+using MovieTicketBooking.Services;
+using MovieTicketBooking.Services.Interfaces;
 
 // 1. Create the WebApplicationBuilder which sets up configuration, logging, and services
 var builder = WebApplication.CreateBuilder(args);
@@ -40,6 +44,10 @@ builder.Services.AddScoped<IScreenService, ScreenService>();
 builder.Services.AddScoped<ISeatService, SeatService>();
 builder.Services.AddScoped<IShowService, ShowService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
+// Password hashing service
+builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+
+builder.Services.AddScoped<IPasswordService, PasswordService>();
 
 // 3. Build the WebApplication
 var app = builder.Build();
