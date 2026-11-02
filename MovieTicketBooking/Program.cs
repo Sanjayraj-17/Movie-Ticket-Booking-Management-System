@@ -38,6 +38,7 @@ builder.Services.AddScoped<IShowRepository, ShowRepository>();
 builder.Services.AddScoped<IBookingRepository, BookingRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
+
 // 4. Register Application Services
 builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<ITheatreService, TheatreService>();
@@ -52,6 +53,7 @@ builder.Services.AddScoped<IPasswordService, PasswordService>();
 
 // 6. Register JWT Token Service
 builder.Services.AddScoped<IJwtService, JwtService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 // 7. Configure JWT Authentication
 var jwtSettings = builder.Configuration.GetSection("Jwt");
