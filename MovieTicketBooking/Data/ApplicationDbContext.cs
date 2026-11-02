@@ -22,7 +22,7 @@ namespace MovieTicketBooking.Data
         public DbSet<ShowSeat> ShowSeats { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<BookingSeat> BookingSeats { get; set; }
-
+        public DbSet<User> Users { get; set; }
         // ==========================================
         // 2. FLUENT API CONFIGURATION
         // ==========================================
