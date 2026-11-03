@@ -1,0 +1,248 @@
+<div class="theatre-selection-page py-5">
+  <div class="container">
+
+    <!-- Header & Context Banner -->
+    <div class="page-header mb-4">
+      <span class="header-label text-emerald">CINEMA LOCATIONS</span>
+      <h1 class="page-title">Select a Cinema Theatre</h1>
+      <p class="page-subtitle text-secondary mb-0">
+        Discover top cinema halls in your city, explore premium auditorium screens, and check live show schedules.
+      </p>
+    </div>
+
+    <!-- Optional Context Movie Filter Banner -->
+    @if (contextMovie) {
+      <div class="movie-context-alert alert d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex align-items-center gap-2">
+          <i class="bi bi-film fs-4 text-emerald"></i>
+          <div>
+            <span class="small text-secondary">Filtered for movie:</span>
+            <strong class="text-white d-block">{{ contextMovie.title }} ({{ contextMovie.language }})</strong>
+          </div>
+        </div>
+        <button (click)="clearMovieFilter()" class="btn btn-outline-secondary btn-sm">
+          <i class="bi bi-x me-1"></i> Show All Theatres & Movies
+        </button>
+      </div>
+    }
+
+    <!-- Search & City Filter Bar -->
+    <div class="filter-bar p-3 mb-4">
+      <div class="row g-2 align-items-center">
+        <!-- Search Input -->
+        <div class="col-md-7 col-lg-8">
+          <div class="input-group">
+            <span class="input-group-text filter-icon"><i class="bi bi-search"></i></span>
+            <input
+              type="text"
+              class="form-control filter-input"
+              placeholder="Search theatre by name, city, or address..."
+              [(ngModel)]="searchQuery"
+              (input)="applyFilters()">
+          </div>
+        </div>
+
+        <!-- City Dropdown -->
+        <div class="col-md-5 col-lg-4">
+          <div class="input-group">
+            <span class="input-group-text filter-icon"><i class="bi bi-geo-alt"></i></span>
+            <select
+              class="form-select filter-select"
+              [(ngModel)]="selectedCity"
+              (change)="applyFilters()">
+              @for (city of cities; track city) {
+                <option [value]="city">City: {{ city }}</option>
+              }
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error State -->
+    @if (errorMessage) {
+      <div class="alert alert-danger bg-danger-subtle border-0 text-danger-emphasis mb-4">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ errorMessage }}
+      </div>
+    }
+
+    <!-- Loading State -->
+    @if (isLoadingTheatres) {
+      <div class="text-center py-5">
+        <div class="spinner-border text-emerald"></div>
+        <p class="text-secondary mt-3">Loading cinema theatres...</p>
+      </div>
+    }
+
+    <!-- Two-Column Theatre Selection Layout -->
+    @else {
+      <div class="row g-4">
+
+        <!-- Left Column: Theatres List -->
+        <div class="col-lg-5 col-xl-4">
+          <div class="theatres-list-panel">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h5 class="panel-heading mb-0">Cinema Theatres</h5>
+              <span class="badge count-badge">{{ filteredTheatres.length }} found</span>
+            </div>
+
+            @if (filteredTheatres.length > 0) {
+              <div class="theatre-cards-scroll">
+                @for (theatre of filteredTheatres; track theatre.id) {
+                  <div
+                    class="theatre-item-card mb-3"
+                    [class.active]="selectedTheatre?.id === theatre.id"
+                    (click)="selectTheatre(theatre)">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                      <h6 class="theatre-title mb-0">{{ theatre.name }}</h6>
+                      <span class="badge city-badge">{{ theatre.city }}</span>
+                    </div>
+
+                    <p class="theatre-address text-secondary mb-2">
+                      <i class="bi bi-geo-alt text-emerald me-1"></i>{{ theatre.address }}
+                    </p>
+
+                    <div class="d-flex justify-content-between align-items-center pt-2 border-top border-dark-subtle">
+                      <small class="text-secondary">
+                        <i class="bi bi-tv me-1"></i> {{ theatre.totalScreens }} Screens
+                      </small>
+                      <span class="select-indicator text-emerald small fw-semibold">
+                        @if (selectedTheatre?.id === theatre.id) {
+                          <i class="bi bi-check-circle-fill me-1"></i> Selected
+                        } @else {
+                          Select <i class="bi bi-chevron-right ms-1"></i>
+                        }
+                      </span>
+                    </div>
+                  </div>
+                }
+              </div>
+            } @else {
+              <div class="text-center py-4 empty-panel">
+                <i class="bi bi-buildings fs-1 text-secondary mb-2 d-block"></i>
+                <p class="text-secondary mb-0">No theatres match your search criteria.</p>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Right Column: Selected Theatre Details (Screens & Shows) -->
+        <div class="col-lg-7 col-xl-8">
+          @if (selectedTheatre) {
+            <div class="theatre-details-panel">
+
+              <!-- Selected Theatre Header Card -->
+              <div class="theatre-hero-box p-4 mb-4">
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
+                  <div>
+                    <span class="badge active-theatre-badge mb-2">Selected Cinema Partner</span>
+                    <h2 class="hero-theatre-title mb-1">{{ selectedTheatre.name }}</h2>
+                    <p class="text-secondary mb-0">
+                      <i class="bi bi-geo-alt-fill text-emerald me-1"></i> {{ selectedTheatre.address }}, {{ selectedTheatre.city }}
+                    </p>
+                  </div>
+                  <div class="theatre-stat-chip">
+                    <span class="chip-number">{{ screens.length }}</span>
+                    <span class="chip-label">Configured Screens</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Available Screens Subsection -->
+              <div class="details-section mb-4 p-4">
+                <h5 class="section-subheading mb-3">
+                  <i class="bi bi-tv text-emerald me-2"></i> Available Auditorium Screens
+                </h5>
+
+                @if (screens.length > 0) {
+                  <div class="row g-3">
+                    @for (screen of screens; track screen.id) {
+                      <div class="col-sm-6">
+                        <div class="screen-chip-card p-3">
+                          <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                              <strong class="screen-name text-white">{{ screen.screenName }}</strong>
+                              <small class="text-secondary d-block mt-1">Screen ID: #{{ screen.id }}</small>
+                            </div>
+                            <span class="badge bg-dark-subtle text-emerald border border-emerald-subtle">
+                              {{ screen.totalSeats }} Seats
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    }
+                  </div>
+                } @else {
+                  <p class="text-secondary mb-0">No screens registered for this theatre yet.</p>
+                }
+              </div>
+
+              <!-- Available Shows Subsection -->
+              <div class="details-section p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <h5 class="section-subheading mb-0">
+                    <i class="bi bi-calendar2-week text-emerald me-2"></i> Scheduled Shows at this Theatre
+                  </h5>
+                  <span class="badge count-badge">{{ shows.length }} shows</span>
+                </div>
+
+                @if (isLoadingDetails) {
+                  <div class="text-center py-4">
+                    <div class="spinner-border text-emerald"></div>
+                    <p class="text-secondary mt-2 mb-0">Loading showtimes...</p>
+                  </div>
+                } @else if (shows.length > 0) {
+                  <div class="row g-3">
+                    @for (show of shows; track show.id) {
+                      <div class="col-md-6">
+                        <div class="show-tile-card p-3">
+                          <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div>
+                              <span class="badge movie-pill mb-1">Movie #{{ show.movieId }}</span>
+                              <h5 class="tile-movie-title mb-0">{{ show.movieTitle }}</h5>
+                            </div>
+                            <span class="tile-price">{{ show.price | currency:'USD':'symbol':'1.2-2' }}</span>
+                          </div>
+
+                          <div class="show-meta-info text-secondary my-2 small">
+                            <div><i class="bi bi-tv me-1"></i> {{ show.screenName }}</div>
+                            <div><i class="bi bi-clock me-1 text-emerald"></i> {{ show.startTime | date:'medium' }}</div>
+                          </div>
+
+                          <div class="mt-3 pt-2 border-top border-dark-subtle d-flex justify-content-between align-items-center">
+                            <small class="text-secondary">{{ show.totalSeats }} Seats Inventory</small>
+                            <a routerLink="/dashboard" class="btn book-ticket-btn btn-sm">
+                              <i class="bi bi-ticket-perforated me-1"></i> Book Seats
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    }
+                  </div>
+                } @else {
+                  <div class="text-center py-4 empty-panel">
+                    <i class="bi bi-calendar-x fs-2 text-secondary mb-2 d-block"></i>
+                    <p class="text-light mb-1">No shows currently scheduled at this theatre.</p>
+                    <small class="text-secondary">Please check back soon or select another theatre from the list.</small>
+                  </div>
+                }
+              </div>
+
+            </div>
+          } @else {
+            <div class="theatre-details-panel p-5 text-center">
+              <i class="bi bi-buildings fs-1 text-secondary mb-3 d-block"></i>
+              <h4 class="text-light">Select a Cinema Theatre</h4>
+              <p class="text-secondary mb-0">
+                Choose any theatre from the left panel to inspect its available auditoriums and live showtimes.
+              </p>
+            </div>
+          }
+        </div>
+
+      </div>
+    }
+
+  </div>
+</div>
+
