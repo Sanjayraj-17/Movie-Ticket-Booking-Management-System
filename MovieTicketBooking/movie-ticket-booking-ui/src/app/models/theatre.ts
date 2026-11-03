@@ -4,7 +4,19 @@ export interface Theatre {
   name: string;
   city: string;
   address: string;
-  totalScreens: number;
+  totalScreens?: number;
+}
+
+export interface CreateTheatreDto {
+  name: string;
+  city: string;
+  address: string;
+}
+
+export interface UpdateTheatreDto {
+  name: string;
+  city: string;
+  address: string;
 }
 
 export interface Screen {
@@ -14,4 +26,3 @@ export interface Screen {
   screenName: string;
   totalSeats: number;
 }
-
