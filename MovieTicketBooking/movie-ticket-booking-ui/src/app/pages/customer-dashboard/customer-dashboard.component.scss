@@ -1,0 +1,368 @@
+.dashboard-container {
+  min-height: calc(100vh - 160px);
+  background: #080b12;
+  color: #ffffff;
+}
+
+.text-emerald {
+  color: #10b981 !important;
+}
+
+// Welcome Banner Card
+.welcome-card {
+  background: linear-gradient(135deg, #0e1726 0%, #0b1120 100%);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+
+  .role-badge {
+    background: rgba(16, 185, 129, 0.15);
+    color: #10b981;
+    font-size: 12px;
+    letter-spacing: 1px;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+  }
+
+  .welcome-title {
+    font-size: clamp(24px, 3.5vw, 34px);
+    font-weight: 800;
+    color: #ffffff;
+    margin-bottom: 8px;
+  }
+
+  .welcome-subtitle {
+    color: #94a3b8;
+    font-size: 15px;
+    max-width: 650px;
+  }
+}
+
+.explore-movies-btn {
+  background: #10b981;
+  color: #ffffff;
+  border: none;
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 10px 18px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #059669;
+    color: #ffffff;
+    transform: translateY(-1px);
+  }
+}
+
+.logout-btn {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 9px 16px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #ef4444;
+    color: #ffffff;
+  }
+}
+
+// Metrics Cards
+.stat-card {
+  background: #0f172a;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 14px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    border-color: rgba(16, 185, 129, 0.3);
+  }
+
+  .stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+
+  .stat-number {
+    font-size: 22px;
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1.2;
+  }
+
+  .stat-label {
+    font-size: 12px;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+    margin-top: 2px;
+  }
+}
+
+// Section Cards
+.section-card {
+  background: #0b1120;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+  padding: 24px;
+
+  .section-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #ffffff;
+  }
+
+  .count-badge {
+    background: #1e293b;
+    color: #94a3b8;
+    font-size: 12px;
+    padding: 6px 10px;
+    border-radius: 8px;
+  }
+}
+
+// Booking Ticket Card
+.booking-ticket-card {
+  background: #111a2e;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 20px;
+  position: relative;
+  transition: border-color 0.2s ease;
+
+  &:hover {
+    border-color: rgba(16, 185, 129, 0.35);
+  }
+
+  .ticket-id {
+    font-size: 12px;
+    color: #10b981;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+
+  .ticket-movie-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 2px 0 0;
+  }
+
+  .ticket-info-item {
+    .item-label {
+      font-size: 12px;
+      color: #94a3b8;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .item-value {
+      font-size: 14px;
+      color: #e2e8f0;
+      font-weight: 600;
+    }
+  }
+
+  .seats-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+
+    .seat-pill {
+      background: rgba(16, 185, 129, 0.15);
+      color: #10b981;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+  }
+
+  .ticket-footer {
+    border-top: 1px dashed rgba(255, 255, 255, 0.1);
+    margin-top: 10px;
+  }
+
+  .cancel-btn {
+    background: transparent;
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: #ef4444;
+      color: white;
+    }
+  }
+}
+
+// Status Badges
+.status-badge {
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: 700;
+
+  &.confirmed {
+    background: rgba(16, 185, 129, 0.18);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.4);
+  }
+
+  &.completed {
+    background: rgba(59, 130, 246, 0.18);
+    color: #60a5fa;
+  }
+
+  &.cancelled {
+    background: rgba(239, 68, 68, 0.18);
+    color: #f87171;
+  }
+}
+
+// History Table
+.history-table {
+  --bs-table-bg: transparent;
+  --bs-table-color: #e2e8f0;
+  border-color: rgba(255, 255, 255, 0.08);
+
+  thead th {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #94a3b8;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    padding: 12px 14px;
+  }
+
+  tbody td {
+    padding: 14px;
+    font-size: 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+}
+
+// Customer Profile Card
+.profile-card {
+  background: #0b1120;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+  padding: 28px;
+  text-align: center;
+
+  .profile-avatar {
+    font-size: 64px;
+    color: #10b981;
+    line-height: 1;
+  }
+
+  .profile-name {
+    font-size: 20px;
+    font-weight: 700;
+    color: #ffffff;
+  }
+
+  .profile-divider {
+    border-color: rgba(255, 255, 255, 0.08);
+    margin: 20px 0;
+  }
+
+  .profile-details-list {
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    .profile-detail-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+
+      .detail-label {
+        color: #94a3b8;
+      }
+
+      .detail-value {
+        font-weight: 600;
+        color: #f1f5f9;
+      }
+    }
+  }
+}
+
+// Sign-in Card (unauthenticated state)
+.login-prompt-card {
+  background: #0f172a;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.45);
+
+  .auth-icon {
+    width: 60px;
+    height: 60px;
+    background: rgba(16, 185, 129, 0.15);
+    color: #10b981;
+    border-radius: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+  }
+
+  .auth-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #ffffff;
+  }
+
+  .auth-input-icon {
+    background: #1e293b;
+    border-color: rgba(255, 255, 255, 0.1);
+    color: #94a3b8;
+  }
+
+  .auth-input {
+    background: #1e293b;
+    border-color: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+
+    &:focus {
+      background: #1e293b;
+      border-color: #10b981;
+      color: #ffffff;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.25);
+    }
+  }
+
+  .quick-hint-box {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px dashed rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
+
+    code {
+      color: #10b981;
+    }
+  }
+}
