@@ -26,5 +26,19 @@ export class ScreenService {
   getScreensByTheatreId(theatreId: number): Observable<Screen[]> {
     return this.http.get<Screen[]>(`${this.apiUrl}/theatre/${theatreId}`);
   }
-}
 
+  // Create a new screen in a theatre (Admin)
+  createScreen(dto: { theatreId: number; screenName: string; totalSeats: number }): Observable<Screen> {
+    return this.http.post<Screen>(this.apiUrl, dto);
+  }
+
+  // Update an existing screen (Admin)
+  updateScreen(id: number, dto: { theatreId: number; screenName: string; totalSeats: number }): Observable<{ message: string }> {
+    return this.http.put<{ message: string }>(`${this.apiUrl}/${id}`, dto);
+  }
+
+  // Delete a screen by ID (Admin)
+  deleteScreen(id: number): Observable<{ message: string }> {
+    return this.http.delete<{ message: string }>(`${this.apiUrl}/${id}`);
+  }
+}

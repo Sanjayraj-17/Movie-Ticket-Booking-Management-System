@@ -25,3 +25,26 @@ export interface SeatRowGroup {
   rowLabel: string;
   seats: ShowSeat[];
 }
+
+// Physical Seat Models for Screen Management
+export interface PhysicalSeat {
+  id: number;
+  screenId: number;
+  rowNumber: string;
+  seatNumber: string;
+  seatType: string;
+}
+
+export interface CreateSeatDto {
+  screenId: number;
+  rowNumber: string;
+  seatNumber: string;
+  seatType: string;
+}
+
+export interface BulkCreateSeatsDto {
+  screenId: number;
+  rowNumber: string;
+  totalSeatsInRow: number;
+  seatType: string;
+}
