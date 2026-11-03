@@ -26,6 +26,8 @@ namespace MovieTicketBooking.Controllers
             return Ok(bookings);
         }
 
+
+
         // GET: api/bookings/{id}
         [HttpGet("{id}")]
         public async Task<ActionResult<BookingResponseDto>> GetById(int id)

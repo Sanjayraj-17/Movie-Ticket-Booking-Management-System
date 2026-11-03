@@ -100,6 +100,59 @@ builder.Services.AddAuthorization();
 // 9. Build Application
 var app = builder.Build();
 
+// 10. Create Admin Account (One-Time Setup)
+var adminEmail = app.Configuration["AdminSeed:Email"];
+var adminPassword = app.Configuration["AdminSeed:Password"];
+
+if (!string.IsNullOrWhiteSpace(adminEmail) &&
+    !string.IsNullOrWhiteSpace(adminPassword))
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var userRepository = scope.ServiceProvider
+            .GetRequiredService<IUserRepository>();
+
+        var passwordService = scope.ServiceProvider
+            .GetRequiredService<IPasswordService>();
+
+        string email = adminEmail.Trim().ToLowerInvariant();
+
+        var existingAdmin =
+            await userRepository.GetByEmailAsync(email);
+
+        if (existingAdmin == null)
+        {
+            var admin = new User
+            {
+                FullName = "System Administrator",
+                Email = email,
+                Role = "Admin",
+                CreatedAt = DateTime.UtcNow
+            };
+
+            admin.PasswordHash =
+                passwordService.HashPassword(admin, adminPassword);
+
+            await userRepository.AddAsync(admin);
+
+            Console.WriteLine("Admin account created successfully.");
+        }
+        else if (!string.Equals(
+            existingAdmin.Role,
+            "Admin",
+            StringComparison.OrdinalIgnoreCase))
+        {
+            throw new InvalidOperationException(
+                "The configured Admin email belongs to a non-Admin user."
+            );
+        }
+        else
+        {
+            Console.WriteLine("Admin account already exists.");
+        }
+    }
+}
+
 // 10. Configure Middleware
 
 // Global Exception Handling
