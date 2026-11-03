@@ -7,6 +7,8 @@ import { ShowSelectionComponent } from './pages/show-selection/show-selection.co
 import { SeatSelectionComponent } from './pages/seat-selection/seat-selection.component';
 import { BookingConfirmationComponent } from './pages/booking-confirmation/booking-confirmation.component';
 import { MyBookingsComponent } from './pages/my-bookings/my-bookings.component';
+import { AdminDashboardComponent } from './pages/admin/admin-dashboard/admin-dashboard.component';
+import { adminGuard } from './guards/admin.guard';
 
 export const routes: Routes = [
   {
@@ -52,6 +54,17 @@ export const routes: Routes = [
     path: 'dashboard',
     component: CustomerDashboardComponent,
     title: 'MovieBook - Customer Dashboard'
+  },
+  {
+    path: 'admin',
+    redirectTo: 'admin/dashboard',
+    pathMatch: 'full'
+  },
+  {
+    path: 'admin/dashboard',
+    component: AdminDashboardComponent,
+    canActivate: [adminGuard],
+    title: 'MovieBook - Admin Dashboard'
   },
   {
     path: '**',

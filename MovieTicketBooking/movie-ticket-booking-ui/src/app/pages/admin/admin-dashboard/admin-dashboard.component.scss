@@ -1,0 +1,239 @@
+.admin-page-wrapper {
+  min-height: calc(100vh - 72px);
+  background: #080B12;
+  color: #FFFFFF;
+}
+
+// Left Admin Sidebar
+.admin-sidebar {
+  background: #0B1120;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  position: sticky;
+  top: 90px;
+
+  .admin-role-badge {
+    background: rgba(16, 185, 129, 0.15);
+    color: #10B981;
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+    padding: 0.35rem 0.6rem;
+    border-radius: 6px;
+  }
+
+  .admin-nav-list {
+    .nav-link {
+      color: rgba(255, 255, 255, 0.7);
+      padding: 0.75rem 1rem;
+      border-radius: 10px;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+
+      i {
+        font-size: 1.1rem;
+        color: rgba(255, 255, 255, 0.5);
+        transition: color 0.2s ease;
+      }
+
+      &:hover {
+        color: #FFFFFF;
+        background: rgba(255, 255, 255, 0.05);
+
+        i {
+          color: #10B981;
+        }
+      }
+
+      &.active {
+        background: rgba(16, 185, 129, 0.15);
+        color: #10B981;
+        font-weight: 600;
+
+        i {
+          color: #10B981;
+        }
+      }
+    }
+  }
+
+  .admin-profile-box {
+    border-color: rgba(255, 255, 255, 0.08) !important;
+  }
+}
+
+// Top Dashboard Banner
+.dashboard-banner-box {
+  background: #0B1120;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+}
+
+// KPI Cards
+.kpi-card {
+  background: #0B1120;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    border-color: rgba(16, 185, 129, 0.3);
+  }
+
+  .kpi-title {
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+  }
+
+  .kpi-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+  }
+
+  .kpi-number {
+    font-size: 1.75rem;
+  }
+}
+
+.text-emerald {
+  color: #10B981 !important;
+}
+
+.bg-emerald-subtle {
+  background-color: rgba(16, 185, 129, 0.15) !important;
+}
+
+// Quick Shortcuts
+.quick-shortcuts-box {
+  background: #0B1120;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+
+  .shortcut-btn {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: rgba(16, 185, 129, 0.08);
+      border-color: rgba(16, 185, 129, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .shortcut-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+    }
+  }
+}
+
+// Recent Bookings Card & Table
+.recent-bookings-card {
+  background: #0B1120;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+
+  .admin-table {
+    margin-bottom: 0;
+    --bs-table-bg: transparent;
+    --bs-table-color: #FFFFFF;
+    --bs-table-border-color: rgba(255, 255, 255, 0.08);
+
+    thead th {
+      color: rgba(255, 255, 255, 0.5);
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 0.85rem 1rem;
+    }
+
+    tbody td {
+      padding: 0.95rem 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 0.88rem;
+    }
+
+    tbody tr:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+  }
+}
+
+// Admin Login Portal Box (for unauthenticated or non-admin state)
+.admin-login-box {
+  background: #0B1120;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+
+  .admin-lock-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto;
+    border-radius: 16px;
+    background: rgba(16, 185, 129, 0.12);
+    color: #10B981;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+  }
+
+  .auth-icon {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-right: none;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .auth-input {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #FFFFFF;
+
+    &:focus {
+      background: rgba(255, 255, 255, 0.07);
+      border-color: #10B981;
+      box-shadow: 0 0 0 0.25rem rgba(16, 185, 129, 0.2);
+      color: #FFFFFF;
+    }
+  }
+
+  .admin-hint-box {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px dashed rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+
+    code {
+      color: #22D3EE;
+    }
+  }
+}
+
+.btn-emerald {
+  background-color: #10B981;
+  color: #080B12;
+  border: none;
+  font-weight: 600;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: #059669;
+    color: #FFFFFF;
+    transform: translateY(-1px);
+  }
+}

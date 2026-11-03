@@ -1,0 +1,377 @@
+<div class="admin-page-wrapper py-4">
+  <div class="container-fluid px-lg-5">
+
+    <!-- Alert Messages -->
+    @if (errorMessage) {
+      <div class="alert alert-danger bg-danger-subtle border-0 text-danger-emphasis mb-4">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ errorMessage }}
+      </div>
+    }
+
+    @if (successMessage) {
+      <div class="alert alert-success bg-success-subtle border-0 text-success-emphasis mb-4">
+        <i class="bi bi-check-circle-fill me-2"></i>{{ successMessage }}
+      </div>
+    }
+
+    <!-- ======================================================== -->
+    <!-- CASE 1: USER IS LOGGED IN AS ADMIN                       -->
+    <!-- ======================================================== -->
+    @if (isAdmin()) {
+
+      <div class="row g-4">
+
+        <!-- Left Admin Navigation Sidebar -->
+        <div class="col-lg-3 col-xl-2">
+          <div class="admin-sidebar p-3">
+            <div class="admin-brand-box pb-3 mb-3 border-bottom border-dark-subtle">
+              <span class="badge admin-role-badge mb-1">
+                <i class="bi bi-shield-shaded me-1"></i> ADMIN PORTAL
+              </span>
+              <h5 class="text-white fw-bold mb-0">Management</h5>
+            </div>
+
+            <!-- Navigation Links List -->
+            <ul class="nav flex-column admin-nav-list gap-1">
+              <li class="nav-item">
+                <a routerLink="/admin/dashboard" class="nav-link active">
+                  <i class="bi bi-speedometer2 me-2"></i> Dashboard Overview
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a routerLink="/admin/movies" class="nav-link">
+                  <i class="bi bi-film me-2"></i> Movie Management
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a routerLink="/admin/theatres" class="nav-link">
+                  <i class="bi bi-buildings me-2"></i> Theatre Management
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a routerLink="/admin/screens" class="nav-link">
+                  <i class="bi bi-tv me-2"></i> Screen Management
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a routerLink="/admin/shows" class="nav-link">
+                  <i class="bi bi-calendar-event me-2"></i> Show Management
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a routerLink="/admin/bookings" class="nav-link">
+                  <i class="bi bi-ticket-perforated me-2"></i> Booking Management
+                </a>
+              </li>
+            </ul>
+
+            <div class="admin-profile-box pt-4 mt-4 border-top border-dark-subtle">
+              <div class="small text-secondary mb-1">Signed in as:</div>
+              <strong class="text-white d-block small mb-3 text-truncate">{{ currentUser()?.email }}</strong>
+              <button (click)="handleAdminLogout()" class="btn btn-outline-danger btn-sm w-100">
+                <i class="bi bi-box-arrow-right me-1"></i> Admin Logout
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Main Admin Dashboard View -->
+        <div class="col-lg-9 col-xl-10">
+          <div class="admin-content-area">
+
+            <!-- Top Header Banner -->
+            <div class="dashboard-banner-box p-4 mb-4">
+              <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+                <div>
+                  <h2 class="text-white fw-bold mb-1">System Overview & Analytics</h2>
+                  <p class="text-secondary small mb-0">
+                    Live operational statistics from your ASP.NET Core Web API and SQL Server database.
+                  </p>
+                </div>
+
+                <div class="d-flex gap-2">
+                  <button (click)="loadAdminMetrics()" class="btn btn-outline-secondary btn-sm" [disabled]="isLoading">
+                    <i class="bi bi-arrow-clockwise me-1"></i> Refresh Data
+                  </button>
+                  <a routerLink="/" class="btn btn-outline-success btn-sm">
+                    <i class="bi bi-box-arrow-up-right me-1"></i> View Live Site
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- 5 Summary KPI Cards -->
+            <div class="row g-3 mb-4">
+              <!-- Total Movies -->
+              <div class="col-sm-6 col-xl">
+                <div class="kpi-card p-3">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="kpi-title text-secondary small text-uppercase fw-bold">Total Movies</span>
+                    <div class="kpi-icon bg-primary-subtle text-primary">
+                      <i class="bi bi-film"></i>
+                    </div>
+                  </div>
+                  <h3 class="kpi-number text-white fw-bold mb-0">{{ totalMovies }}</h3>
+                  <small class="text-secondary">Catalog titles</small>
+                </div>
+              </div>
+
+              <!-- Total Theatres -->
+              <div class="col-sm-6 col-xl">
+                <div class="kpi-card p-3">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="kpi-title text-secondary small text-uppercase fw-bold">Theatres</span>
+                    <div class="kpi-icon bg-info-subtle text-info">
+                      <i class="bi bi-buildings"></i>
+                    </div>
+                  </div>
+                  <h3 class="kpi-number text-white fw-bold mb-0">{{ totalTheatres }}</h3>
+                  <small class="text-secondary">Cinema branches</small>
+                </div>
+              </div>
+
+              <!-- Total Shows -->
+              <div class="col-sm-6 col-xl">
+                <div class="kpi-card p-3">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="kpi-title text-secondary small text-uppercase fw-bold">Active Shows</span>
+                    <div class="kpi-icon bg-success-subtle text-success">
+                      <i class="bi bi-calendar2-week"></i>
+                    </div>
+                  </div>
+                  <h3 class="kpi-number text-white fw-bold mb-0">{{ totalShows }}</h3>
+                  <small class="text-secondary">Scheduled screenings</small>
+                </div>
+              </div>
+
+              <!-- Total Bookings -->
+              <div class="col-sm-6 col-xl">
+                <div class="kpi-card p-3">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="kpi-title text-secondary small text-uppercase fw-bold">Bookings</span>
+                    <div class="kpi-icon bg-warning-subtle text-warning">
+                      <i class="bi bi-ticket-perforated"></i>
+                    </div>
+                  </div>
+                  <h3 class="kpi-number text-white fw-bold mb-0">{{ totalBookings }}</h3>
+                  <small class="text-secondary">Customer transactions</small>
+                </div>
+              </div>
+
+              <!-- Total Revenue -->
+              <div class="col-sm-6 col-xl">
+                <div class="kpi-card p-3">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="kpi-title text-secondary small text-uppercase fw-bold">Total Revenue</span>
+                    <div class="kpi-icon bg-emerald-subtle text-emerald">
+                      <i class="bi bi-cash-stack"></i>
+                    </div>
+                  </div>
+                  <h3 class="kpi-number text-emerald fw-bold mb-0">
+                    {{ totalRevenue | currency:'USD':'symbol':'1.0-0' }}
+                  </h3>
+                  <small class="text-secondary">Confirmed revenue</small>
+                </div>
+              </div>
+            </div>
+
+            <!-- Quick Shortcuts Row -->
+            <div class="quick-shortcuts-box p-4 mb-4">
+              <h5 class="text-white fw-bold mb-3">Management Shortcuts</h5>
+              <div class="row g-3">
+                <div class="col-md-4">
+                  <a routerLink="/admin/movies" class="shortcut-btn d-flex align-items-center p-3 text-decoration-none">
+                    <div class="shortcut-icon bg-primary-subtle text-primary me-3">
+                      <i class="bi bi-plus-circle"></i>
+                    </div>
+                    <div>
+                      <strong class="text-white d-block">Manage Movies</strong>
+                      <small class="text-secondary">Add, edit, or remove films</small>
+                    </div>
+                  </a>
+                </div>
+
+                <div class="col-md-4">
+                  <a routerLink="/admin/theatres" class="shortcut-btn d-flex align-items-center p-3 text-decoration-none">
+                    <div class="shortcut-icon bg-info-subtle text-info me-3">
+                      <i class="bi bi-building-add"></i>
+                    </div>
+                    <div>
+                      <strong class="text-white d-block">Manage Theatres</strong>
+                      <small class="text-secondary">Configure cinemas & cities</small>
+                    </div>
+                  </a>
+                </div>
+
+                <div class="col-md-4">
+                  <a routerLink="/admin/shows" class="shortcut-btn d-flex align-items-center p-3 text-decoration-none">
+                    <div class="shortcut-icon bg-success-subtle text-success me-3">
+                      <i class="bi bi-calendar-plus"></i>
+                    </div>
+                    <div>
+                      <strong class="text-white d-block">Manage Shows</strong>
+                      <small class="text-secondary">Schedule screening times</small>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Recent Customer Bookings Table -->
+            <div class="recent-bookings-card p-4">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                  <h5 class="text-white fw-bold mb-0">Recent Customer Bookings</h5>
+                  <small class="text-secondary">Audit trail of latest system reservations</small>
+                </div>
+                <a routerLink="/admin/bookings" class="btn btn-outline-success btn-sm">
+                  View All Bookings <i class="bi bi-arrow-right ms-1"></i>
+                </a>
+              </div>
+
+              @if (isLoading) {
+                <div class="text-center py-4">
+                  <div class="spinner-border text-emerald"></div>
+                  <p class="text-secondary mt-2 mb-0">Loading transactions...</p>
+                </div>
+              } @else if (recentBookings.length > 0) {
+                <div class="table-responsive">
+                  <table class="table admin-table align-middle">
+                    <thead>
+                      <tr>
+                        <th>Booking ID</th>
+                        <th>Customer</th>
+                        <th>Movie Title</th>
+                        <th>Cinema & Screen</th>
+                        <th>Showtime</th>
+                        <th>Seats</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      @for (b of recentBookings; track b.id) {
+                        <tr>
+                          <td class="fw-bold text-emerald">#{{ b.id }}</td>
+                          <td>
+                            <strong class="text-white d-block">{{ b.customerName }}</strong>
+                            <small class="text-secondary">{{ b.customerEmail }}</small>
+                          </td>
+                          <td class="text-white fw-semibold">{{ b.movieTitle }}</td>
+                          <td>
+                            <span class="text-light d-block">{{ b.theatreName }}</span>
+                            <small class="text-secondary">{{ b.screenName }}</small>
+                          </td>
+                          <td>
+                            <span class="text-light d-block">{{ b.startTime | date:'shortDate' }}</span>
+                            <small class="text-secondary">{{ b.startTime | date:'shortTime' }}</small>
+                          </td>
+                          <td>
+                            <span class="badge bg-dark-subtle text-light border border-secondary">
+                              {{ b.seats.length }} Seats
+                            </span>
+                          </td>
+                          <td class="fw-bold text-emerald">
+                            {{ b.totalAmount | currency:'USD':'symbol':'1.2-2' }}
+                          </td>
+                          <td>
+                            @if (b.bookingStatus.toLowerCase() === 'confirmed') {
+                              <span class="badge bg-success-subtle text-success">Confirmed</span>
+                            } @else {
+                              <span class="badge bg-danger-subtle text-danger">Cancelled</span>
+                            }
+                          </td>
+                        </tr>
+                      }
+                    </tbody>
+                  </table>
+                </div>
+              } @else {
+                <p class="text-secondary text-center py-3 mb-0">No booking transactions recorded.</p>
+              }
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    }
+
+    <!-- ======================================================== -->
+    <!-- CASE 2: NOT LOGGED IN AS ADMIN -> ADMIN LOGIN FORM       -->
+    <!-- ======================================================== -->
+    @else {
+      <div class="row justify-content-center py-5">
+        <div class="col-md-6 col-lg-5 col-xl-4">
+          <div class="admin-login-box p-4 p-md-5 text-center">
+            <div class="admin-lock-icon mb-3">
+              <i class="bi bi-shield-lock-fill"></i>
+            </div>
+            <h2 class="text-white fw-bold mb-2">Admin Portal Access</h2>
+            <p class="text-secondary small mb-4">
+              Enter your system administrator credentials to access the MovieBook management console.
+            </p>
+
+            <form (ngSubmit)="handleAdminLogin()" class="text-start">
+              <div class="mb-3">
+                <label class="form-label text-secondary small fw-bold">Admin Email</label>
+                <div class="input-group">
+                  <span class="input-group-text auth-icon"><i class="bi bi-envelope"></i></span>
+                  <input
+                    type="email"
+                    class="form-control auth-input"
+                    placeholder="admin@example.com"
+                    [(ngModel)]="adminEmail"
+                    name="email"
+                    required>
+                </div>
+              </div>
+
+              <div class="mb-4">
+                <label class="form-label text-secondary small fw-bold">Admin Password</label>
+                <div class="input-group">
+                  <span class="input-group-text auth-icon"><i class="bi bi-key"></i></span>
+                  <input
+                    type="password"
+                    class="form-control auth-input"
+                    placeholder="Enter admin password"
+                    [(ngModel)]="adminPassword"
+                    name="password"
+                    required>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                class="btn btn-emerald w-100 py-3 fw-bold"
+                [disabled]="isLoggingIn">
+                @if (isLoggingIn) {
+                  <span class="spinner-border spinner-border-sm me-2"></span> Authenticating...
+                } @else {
+                  <i class="bi bi-box-arrow-in-right me-1"></i> Sign In as Administrator
+                }
+              </button>
+            </form>
+
+            <div class="mt-4 p-3 admin-hint-box text-start">
+              <small class="text-secondary d-block mb-1">
+                <i class="bi bi-info-circle text-emerald me-1"></i> <strong>Configured Administrator:</strong>
+              </small>
+              <small class="text-secondary font-monospace d-block">
+                Email: <code>admin@example.com</code><br>
+                Password: <code>Admin@123</code> (or your seed password)
+              </small>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+
+  </div>
+</div>
