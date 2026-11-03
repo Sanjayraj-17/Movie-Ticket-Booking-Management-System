@@ -51,22 +51,28 @@
           <div class="col-6 col-md-4 col-lg-3">
             <div class="movie-card">
               <!-- Movie Poster -->
-              <div class="movie-poster">
-                @if (movie.posterUrl) {
-                  <img [src]="movie.posterUrl" [alt]="movie.title">
-                } @else {
-                  <div class="movie-poster-placeholder">
-                    <i class="bi bi-film"></i>
-                  </div>
-                }
-              </div>
+              <a [routerLink]="['/movies', movie.id]" class="d-block text-decoration-none">
+                <div class="movie-poster">
+                  @if (movie.posterUrl) {
+                    <img [src]="movie.posterUrl" [alt]="movie.title">
+                  } @else {
+                    <div class="movie-poster-placeholder">
+                      <i class="bi bi-film"></i>
+                    </div>
+                  }
+                </div>
+              </a>
 
               <!-- Movie Details -->
               <div class="movie-info">
-                <h5>{{ movie.title }}</h5>
+                <h5>
+                  <a [routerLink]="['/movies', movie.id]" class="text-white text-decoration-none">
+                    {{ movie.title }}
+                  </a>
+                </h5>
                 <p>{{ movie.genre }} • {{ movie.language }}</p>
-                <a routerLink="/dashboard" class="btn book-btn w-100">
-                  <i class="bi bi-ticket-perforated me-1"></i> Book Now
+                <a [routerLink]="['/movies', movie.id]" class="btn book-btn w-100">
+                  <i class="bi bi-ticket-perforated me-1"></i> View Details & Shows
                 </a>
               </div>
             </div>
