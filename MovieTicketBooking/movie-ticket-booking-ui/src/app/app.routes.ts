@@ -5,6 +5,7 @@ import { MovieDetailsComponent } from './pages/movie-details/movie-details.compo
 import { TheatreSelectionComponent } from './pages/theatre-selection/theatre-selection.component';
 import { ShowSelectionComponent } from './pages/show-selection/show-selection.component';
 import { SeatSelectionComponent } from './pages/seat-selection/seat-selection.component';
+import { BookingConfirmationComponent } from './pages/booking-confirmation/booking-confirmation.component';
 
 export const routes: Routes = [
   {
@@ -35,6 +36,11 @@ export const routes: Routes = [
   {
     path: 'seats/:showId',
     redirectTo: 'booking/seats/:showId'
+  },
+  {
+    path: 'booking/confirmation',
+    component: BookingConfirmationComponent,
+    title: 'MovieBook - Booking Confirmation'
   },
   {
     path: 'dashboard',
