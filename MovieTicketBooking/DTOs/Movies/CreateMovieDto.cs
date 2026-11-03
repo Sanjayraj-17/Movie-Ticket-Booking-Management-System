@@ -9,5 +9,6 @@ namespace MovieTicketBooking.DTOs.Movies
         public string Genre { get; set; } = string.Empty;
         public int DurationInMinutes { get; set; }
         public DateTime ReleaseDate { get; set; }
+        public string PosterUrl { get; set; } = string.Empty;
     }
 }

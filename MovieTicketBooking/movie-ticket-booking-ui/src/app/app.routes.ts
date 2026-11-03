@@ -8,6 +8,7 @@ import { SeatSelectionComponent } from './pages/seat-selection/seat-selection.co
 import { BookingConfirmationComponent } from './pages/booking-confirmation/booking-confirmation.component';
 import { MyBookingsComponent } from './pages/my-bookings/my-bookings.component';
 import { AdminDashboardComponent } from './pages/admin/admin-dashboard/admin-dashboard.component';
+import { AdminMoviesComponent } from './pages/admin/admin-movies/admin-movies.component';
 import { adminGuard } from './guards/admin.guard';
 
 export const routes: Routes = [
@@ -65,6 +66,12 @@ export const routes: Routes = [
     component: AdminDashboardComponent,
     canActivate: [adminGuard],
     title: 'MovieBook - Admin Dashboard'
+  },
+  {
+    path: 'admin/movies',
+    component: AdminMoviesComponent,
+    canActivate: [adminGuard],
+    title: 'MovieBook - Admin Movie Management'
   },
   {
     path: '**',
