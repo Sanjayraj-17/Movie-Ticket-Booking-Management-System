@@ -1,0 +1,221 @@
+<div class="seat-selection-page py-5">
+  <div class="container">
+
+    <!-- Back to Shows Navigation -->
+    <div class="mb-4">
+      <a routerLink="/shows" class="back-link">
+        <i class="bi bi-arrow-left me-2"></i> Back to Shows
+      </a>
+    </div>
+
+    <!-- Error State -->
+    @if (errorMessage) {
+      <div class="alert alert-danger bg-danger-subtle border-0 text-danger-emphasis py-4 text-center">
+        <i class="bi bi-exclamation-triangle-fill fs-2 d-block mb-2"></i>
+        <h5>{{ errorMessage }}</h5>
+        <a routerLink="/shows" class="btn btn-outline-danger mt-2">
+          Return to Show Selection
+        </a>
+      </div>
+    }
+
+    <!-- Loading State -->
+    @else if (isLoading) {
+      <div class="text-center py-5">
+        <div class="spinner-border text-emerald"></div>
+        <p class="text-secondary mt-3">Loading interactive seating chart...</p>
+      </div>
+    }
+
+    <!-- Main Seat Selection Interface -->
+    @else if (show) {
+
+      <!-- Show Header Bar -->
+      <div class="show-header-card p-4 mb-4">
+        <div class="row align-items-center g-3">
+          <div class="col-md-7">
+            <span class="badge show-time-badge mb-1">
+              <i class="bi bi-clock me-1"></i> {{ show.startTime | date:'medium' }}
+            </span>
+            <h2 class="show-movie-title mb-1 text-white">{{ show.movieTitle }}</h2>
+            <p class="text-secondary mb-0 small">
+              <i class="bi bi-buildings text-emerald me-1"></i> {{ show.theatreName }}
+              <span class="mx-2">•</span>
+              <i class="bi bi-tv text-emerald me-1"></i> {{ show.screenName }}
+            </p>
+          </div>
+
+          <div class="col-md-5 text-md-end">
+            @if (availabilitySummary) {
+              <div class="d-inline-flex gap-2">
+                <span class="badge availability-chip available">
+                  <i class="bi bi-check2 me-1"></i> {{ availabilitySummary.availableSeatsCount }} Available
+                </span>
+                <span class="badge availability-chip booked">
+                  <i class="bi bi-lock me-1"></i> {{ availabilitySummary.bookedSeatsCount }} Booked
+                </span>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-4">
+
+        <!-- Left / Center Column: Seating Chart & Screen Visualizer -->
+        <div class="col-lg-8">
+          <div class="seating-chart-container p-4">
+
+            <!-- Cinema Screen Visualizer -->
+            <div class="cinema-screen-wrap mb-5 text-center">
+              <div class="cinema-screen-curve"></div>
+              <span class="screen-label">
+                <i class="bi bi-display me-1"></i> ALL EYES THIS WAY • CINEMA SCREEN
+              </span>
+            </div>
+
+            <!-- Visual Rows Grid -->
+            <div class="seats-grid my-4">
+              @for (row of rowGroups; track row.rowLabel) {
+                <div class="seat-row d-flex align-items-center justify-content-center gap-2 mb-3">
+                  <!-- Row Label Left -->
+                  <span class="row-label me-2">{{ row.rowLabel }}</span>
+
+                  <!-- Seat Chips -->
+                  <div class="d-flex flex-wrap justify-content-center gap-2">
+                    @for (seat of row.seats; track seat.seatId) {
+                      <button
+                        type="button"
+                        class="seat-btn"
+                        [class.available]="seat.status.toLowerCase() === 'available'"
+                        [class.booked]="seat.status.toLowerCase() !== 'available'"
+                        [class.selected]="isSeatSelected(seat)"
+                        [disabled]="seat.status.toLowerCase() !== 'available'"
+                        (click)="toggleSeat(seat)"
+                        [title]="seat.seatNumber + ' - ' + seat.seatType + ' (' + (seat.price | currency:'USD':'symbol':'1.2-2') + ')'">
+
+                        @if (isSeatSelected(seat)) {
+                          <i class="bi bi-check-lg"></i>
+                        } @else if (seat.status.toLowerCase() !== 'available') {
+                          <i class="bi bi-x"></i>
+                        } @else {
+                          {{ seat.seatNumber }}
+                        }
+
+                      </button>
+                    }
+                  </div>
+
+                  <!-- Row Label Right -->
+                  <span class="row-label ms-2">{{ row.rowLabel }}</span>
+                </div>
+              }
+            </div>
+
+            <!-- Seat Legend -->
+            <div class="seat-legend d-flex flex-wrap justify-content-center gap-4 pt-4 border-top border-dark-subtle mt-4">
+              <div class="legend-item d-flex align-items-center gap-2">
+                <span class="legend-box available"></span>
+                <span class="small text-secondary">Available</span>
+              </div>
+
+              <div class="legend-item d-flex align-items-center gap-2">
+                <span class="legend-box selected"></span>
+                <span class="small text-secondary">Selected</span>
+              </div>
+
+              <div class="legend-item d-flex align-items-center gap-2">
+                <span class="legend-box booked"></span>
+                <span class="small text-secondary">Booked / Reserved</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Right Column: Live Selection & Price Summary -->
+        <div class="col-lg-4">
+          <div class="selection-summary-card p-4">
+            <h4 class="summary-title mb-3 text-white">Booking Summary</h4>
+
+            <div class="summary-meta pb-3 mb-3 border-bottom border-dark-subtle">
+              <div class="movie-name fw-bold text-light mb-1">{{ show.movieTitle }}</div>
+              <small class="text-secondary d-block">{{ show.theatreName }}</small>
+              <small class="text-secondary d-block">{{ show.screenName }} • {{ show.startTime | date:'shortTime' }}</small>
+            </div>
+
+            <!-- Selected Seats List -->
+            <div class="selected-seats-section mb-3">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="small text-secondary text-uppercase fw-bold">Selected Seats</span>
+                @if (selectedSeats.length > 0) {
+                  <button (click)="clearSelection()" class="btn btn-link btn-sm text-danger text-decoration-none p-0">
+                    Clear All
+                  </button>
+                }
+              </div>
+
+              @if (selectedSeats.length > 0) {
+                <div class="selected-seats-pills d-flex flex-wrap gap-2 mb-3">
+                  @for (seat of selectedSeats; track seat.seatId) {
+                    <span class="selected-seat-chip">
+                      {{ seat.seatNumber }} ({{ seat.seatType }})
+                      <button (click)="toggleSeat(seat)" class="remove-seat-btn ms-1" title="Remove">&times;</button>
+                    </span>
+                  }
+                </div>
+
+                <!-- Price Breakdown Table -->
+                <div class="price-breakdown mb-3">
+                  @for (seat of selectedSeats; track seat.seatId) {
+                    <div class="d-flex justify-content-between small text-secondary py-1">
+                      <span>Seat {{ seat.seatNumber }} ({{ seat.seatType }})</span>
+                      <span class="text-light">{{ seat.price | currency:'USD':'symbol':'1.2-2' }}</span>
+                    </div>
+                  }
+                </div>
+
+                <div class="total-price-box d-flex justify-content-between align-items-center pt-3 border-top border-dark-subtle">
+                  <span class="fw-bold text-white">Total Amount</span>
+                  <span class="total-amount text-emerald fw-bold fs-4">
+                    {{ calculateTotalAmount() | currency:'USD':'symbol':'1.2-2' }}
+                  </span>
+                </div>
+              } @else {
+                <div class="text-center py-4 empty-selection-box">
+                  <i class="bi bi-cursor fs-2 text-secondary mb-2 d-block"></i>
+                  <p class="text-secondary small mb-0">
+                    Click on any available seat in the seating chart to select your tickets.
+                  </p>
+                </div>
+              }
+            </div>
+
+            <!-- Continue Button -->
+            <div class="mt-4 pt-2">
+              <button
+                type="button"
+                class="btn proceed-checkout-btn w-100 py-3"
+                [disabled]="selectedSeats.length === 0"
+                (click)="proceedToConfirmation()">
+                @if (selectedSeats.length > 0) {
+                  <i class="bi bi-arrow-right-circle me-1"></i> Continue to Confirmation ({{ selectedSeats.length }})
+                } @else {
+                  Select Seats to Continue
+                }
+              </button>
+
+              <small class="text-secondary d-block text-center mt-2">
+                <i class="bi bi-shield-lock me-1"></i> Total price will be re-verified on backend
+              </small>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    }
+
+  </div>
+</div>

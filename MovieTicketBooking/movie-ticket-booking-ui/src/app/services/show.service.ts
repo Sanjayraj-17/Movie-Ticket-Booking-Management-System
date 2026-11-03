@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Show } from '../models/show';
+import { ShowSeatAvailabilitySummary } from '../models/seat';
 
 @Injectable({
   providedIn: 'root'
@@ -32,8 +33,8 @@ export class ShowService {
     return this.http.get<Show[]>(`${this.apiUrl}/filter`, { params });
   }
 
-  // Get seat availability summary for a show
-  getSeatAvailability(showId: number): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/${showId}/availability`);
+  // Get interactive seat availability summary for a show
+  getSeatAvailability(showId: number): Observable<ShowSeatAvailabilitySummary> {
+    return this.http.get<ShowSeatAvailabilitySummary>(`${this.apiUrl}/${showId}/availability`);
   }
 }

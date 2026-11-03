@@ -4,6 +4,7 @@ import { CustomerDashboardComponent } from './pages/customer-dashboard/customer-
 import { MovieDetailsComponent } from './pages/movie-details/movie-details.component';
 import { TheatreSelectionComponent } from './pages/theatre-selection/theatre-selection.component';
 import { ShowSelectionComponent } from './pages/show-selection/show-selection.component';
+import { SeatSelectionComponent } from './pages/seat-selection/seat-selection.component';
 
 export const routes: Routes = [
   {
@@ -25,6 +26,15 @@ export const routes: Routes = [
     path: 'shows',
     component: ShowSelectionComponent,
     title: 'MovieBook - Show Selection'
+  },
+  {
+    path: 'booking/seats/:showId',
+    component: SeatSelectionComponent,
+    title: 'MovieBook - Seat Selection'
+  },
+  {
+    path: 'seats/:showId',
+    redirectTo: 'booking/seats/:showId'
   },
   {
     path: 'dashboard',
