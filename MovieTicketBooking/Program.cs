@@ -169,17 +169,44 @@ if (!string.IsNullOrWhiteSpace(adminEmail) &&
 // Global Exception Handling
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
+
+
+//  HTTPS Redirection
+app.UseHttpsRedirection();
+
+
+//  Routing
+app.UseRouting();
+
+app.UseCors("AllowAngularApp");
+
+//  Endpoint Metadata Diagnostics
+if (app.Environment.IsDevelopment())
+{
+    app.UseMiddleware<EndpointMetadataMiddleware>();
+}
+
+// Authentication must run before Authorization
+app.UseAuthentication();
+
+// . Authentication Diagnostics
+if (app.Environment.IsDevelopment())
+{
+    app.UseMiddleware<AuthenticationDiagnosticsMiddleware>();
+
+    // 8. Authorization Diagnostics
+    app.UseMiddleware<AuthorizationDiagnosticsMiddleware>();
+}
+
+app.UseAuthorization();
+
+
+// Development API Documentation
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
     app.MapScalarApiReference();
 }
-
-app.UseCors("AllowAngularApp");
-
-// Authentication must run before Authorization
-app.UseAuthentication();
-app.UseAuthorization();
 
 // Map Controllers
 app.MapControllers();
