@@ -13,6 +13,7 @@ import { AdminTheatresComponent } from './pages/admin/admin-theatres/admin-theat
 import { AdminScreensComponent } from './pages/admin/admin-screens/admin-screens.component';
 import { AdminShowsComponent } from './pages/admin/admin-shows/admin-shows.component';
 import { AdminBookingsComponent } from './pages/admin/admin-bookings/admin-bookings.component';
+import { AdminUsersComponent } from './pages/admin/admin-users/admin-users.component';
 import { adminGuard } from './guards/admin.guard';
 
 export const routes: Routes = [
@@ -100,6 +101,12 @@ export const routes: Routes = [
     component: AdminBookingsComponent,
     canActivate: [adminGuard],
     title: 'MovieBook - Admin Booking Management'
+  },
+  {
+    path: 'admin/users',
+    component: AdminUsersComponent,
+    canActivate: [adminGuard],
+    title: 'MovieBook - Admin User Management'
   },
   {
     path: '**',

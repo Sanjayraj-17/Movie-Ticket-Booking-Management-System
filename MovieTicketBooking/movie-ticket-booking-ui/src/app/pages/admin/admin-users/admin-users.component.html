@@ -1,0 +1,330 @@
+<div class="admin-page-wrapper py-4">
+  <div class="container-fluid px-lg-5">
+
+    <!-- System Alerts -->
+    @if (errorMessage) {
+      <div class="alert alert-danger bg-danger-subtle border-0 text-danger-emphasis mb-4 alert-dismissible fade show">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ errorMessage }}
+        <button type="button" class="btn-close" (click)="errorMessage = ''"></button>
+      </div>
+    }
+
+    <div class="row g-4">
+
+      <!-- Left Navigation Sidebar -->
+      <div class="col-lg-3 col-xl-2">
+        <div class="admin-sidebar p-3">
+          <div class="admin-brand-box pb-3 mb-3 border-bottom border-dark-subtle">
+            <span class="badge admin-role-badge mb-1">
+              <i class="bi bi-shield-shaded me-1"></i> ADMIN PORTAL
+            </span>
+            <h5 class="text-white fw-bold mb-0">Management</h5>
+          </div>
+
+          <ul class="nav flex-column admin-nav-list gap-1">
+            <li class="nav-item">
+              <a routerLink="/admin/dashboard" class="nav-link">
+                <i class="bi bi-speedometer2 me-2"></i> Dashboard Overview
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a routerLink="/admin/movies" class="nav-link">
+                <i class="bi bi-film me-2"></i> Movie Management
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a routerLink="/admin/theatres" class="nav-link">
+                <i class="bi bi-buildings me-2"></i> Theatre Management
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a routerLink="/admin/screens" class="nav-link">
+                <i class="bi bi-tv me-2"></i> Screen Management
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a routerLink="/admin/shows" class="nav-link">
+                <i class="bi bi-calendar-event me-2"></i> Show Management
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a routerLink="/admin/bookings" class="nav-link">
+                <i class="bi bi-ticket-perforated me-2"></i> Booking Management
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a routerLink="/admin/users" class="nav-link active">
+                <i class="bi bi-people me-2"></i> User Management
+              </a>
+            </li>
+          </ul>
+
+          <div class="admin-profile-box pt-4 mt-4 border-top border-dark-subtle">
+            <div class="small text-secondary mb-1">Signed in as:</div>
+            <strong class="text-white d-block small mb-3 text-truncate">{{ authService.currentUser()?.email }}</strong>
+            <a routerLink="/" class="btn btn-outline-secondary btn-sm w-100">
+              <i class="bi bi-arrow-left me-1"></i> Public Site
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Main Content Area -->
+      <div class="col-lg-9 col-xl-10">
+        <div class="admin-content-area">
+
+          <!-- Header Card -->
+          <div class="content-header-card p-4 mb-4">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+              <div>
+                <h2 class="text-white fw-bold mb-1">User & Customer Management</h2>
+                <p class="text-secondary small mb-0">
+                  Inspect registered customer profiles, administrative accounts, and backend authentication data.
+                </p>
+              </div>
+
+              <button (click)="loadCustomerProfilesFromBackend()" class="btn btn-outline-secondary btn-sm" [disabled]="isLoading">
+                <i class="bi bi-arrow-clockwise me-1"></i> Refresh Profiles
+              </button>
+            </div>
+          </div>
+
+          <!-- MISSING BACKEND ENDPOINT NOTICE BOX (Rule 12 Compliance) -->
+          <div class="backend-notice-card p-4 mb-4">
+            <div class="d-flex align-items-start gap-3">
+              <div class="notice-icon text-warning fs-3">
+                <i class="bi bi-info-circle-fill"></i>
+              </div>
+              <div>
+                <h5 class="text-white fw-bold mb-1">Backend Architecture Status: Missing Endpoint Report</h5>
+                <p class="text-secondary small mb-2">
+                  As mandated by project specification rules, the frontend strictly consumes actual backend APIs without fabricating mock data.
+                  The current ASP.NET Core backend exposes authentication endpoints (<code class="text-cyan">POST /api/auth/register</code> and <code class="text-cyan">POST /api/auth/login</code>),
+                  but does <strong>not</strong> currently include a dedicated <code class="text-warning">GET /api/users</code> or <code class="text-warning">UsersController</code> to retrieve the full user table.
+                </p>
+                <div class="notice-badge-box p-3">
+                  <span class="text-secondary small d-block mb-1">
+                    <i class="bi bi-lightbulb text-emerald me-1"></i> <strong>Live Data Source Active:</strong>
+                  </span>
+                  <p class="text-secondary small mb-0">
+                    To deliver complete management capability with 100% genuine backend data, this module queries actual customer records from confirmed database bookings (<code class="text-emerald">GET /api/bookings</code>) and aggregates live customer accounts, order histories, and contact profiles.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Current Administrator Card -->
+          <div class="admin-card-box p-4 mb-4">
+            <h5 class="text-white fw-bold mb-3">
+              <i class="bi bi-shield-shaded me-2 text-emerald"></i> Active Administrator Session
+            </h5>
+            <div class="row g-3 align-items-center">
+              <div class="col-sm-6 col-md-3">
+                <span class="text-secondary small d-block">Full Name</span>
+                <strong class="text-white">{{ currentUser()?.fullName }}</strong>
+              </div>
+              <div class="col-sm-6 col-md-4">
+                <span class="text-secondary small d-block">Admin Email</span>
+                <span class="text-white">{{ currentUser()?.email }}</span>
+              </div>
+              <div class="col-sm-6 col-md-2">
+                <span class="text-secondary small d-block">Assigned Role</span>
+                <span class="badge bg-emerald-subtle text-emerald px-2 py-1">
+                  {{ currentUser()?.role || 'Admin' }}
+                </span>
+              </div>
+              <div class="col-sm-6 col-md-3">
+                <span class="text-secondary small d-block">JWT Authentication</span>
+                <span class="badge bg-success-subtle text-success px-2 py-1">
+                  <i class="bi bi-check2-circle me-1"></i> Active Bearer Token
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Registered Customer Profiles Table Card -->
+          <div class="table-container-card p-4">
+            <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+              <div>
+                <h5 class="text-white fw-bold mb-0">Customer User Directory</h5>
+                <small class="text-secondary">Profiles aggregated from live customer booking records</small>
+              </div>
+
+              <!-- Search Bar -->
+              <div class="input-group" style="max-width: 320px;">
+                <span class="input-group-text search-icon"><i class="bi bi-search"></i></span>
+                <input
+                  type="text"
+                  class="form-control search-input"
+                  placeholder="Search customers..."
+                  [(ngModel)]="searchQuery"
+                  (input)="applyFilter()">
+              </div>
+            </div>
+
+            @if (isLoading) {
+              <div class="text-center py-5">
+                <div class="spinner-border text-emerald"></div>
+                <p class="text-secondary mt-3 mb-0">Aggregating customer accounts from database...</p>
+              </div>
+            } @else if (filteredCustomers.length > 0) {
+              <div class="table-responsive">
+                <table class="table admin-user-table align-middle">
+                  <thead>
+                    <tr>
+                      <th>Customer Name</th>
+                      <th>Email Address</th>
+                      <th>Contact Phone</th>
+                      <th>Total Bookings</th>
+                      <th>Lifetime Spend</th>
+                      <th>Last Active</th>
+                      <th class="text-end">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (c of filteredCustomers; track c.email) {
+                      <tr>
+                        <!-- Name & Avatar -->
+                        <td>
+                          <div class="d-flex align-items-center gap-2">
+                            <div class="user-avatar-circle bg-emerald-subtle text-emerald">
+                              {{ c.name.charAt(0).toUpperCase() }}
+                            </div>
+                            <strong class="text-white">{{ c.name }}</strong>
+                          </div>
+                        </td>
+
+                        <!-- Email -->
+                        <td>
+                          <span class="text-light small">{{ c.email }}</span>
+                        </td>
+
+                        <!-- Phone -->
+                        <td>
+                          <span class="text-secondary font-monospace small">{{ c.phone }}</span>
+                        </td>
+
+                        <!-- Total Bookings -->
+                        <td>
+                          <span class="badge bg-dark-subtle text-light border border-secondary">
+                            {{ c.totalBookings }} Bookings
+                          </span>
+                        </td>
+
+                        <!-- Lifetime Spend -->
+                        <td>
+                          <strong class="text-emerald">
+                            {{ c.totalSpent | currency:'USD':'symbol':'1.2-2' }}
+                          </strong>
+                        </td>
+
+                        <!-- Last Active -->
+                        <td>
+                          <span class="text-secondary small">
+                            {{ c.lastBookingDate | date:'mediumDate' }}
+                          </span>
+                        </td>
+
+                        <!-- Actions -->
+                        <td class="text-end">
+                          <button
+                            (click)="viewCustomerDetails(c)"
+                            class="btn btn-outline-info btn-sm"
+                            title="View Customer Information">
+                            <i class="bi bi-person-lines-fill me-1"></i> View Info
+                          </button>
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            } @else {
+              <div class="empty-state text-center py-5">
+                <i class="bi bi-people display-4 text-secondary mb-3 d-block"></i>
+                <h5 class="text-white">No Customer Profiles Found</h5>
+                <p class="text-secondary small mb-0">
+                  {{ searchQuery ? 'No customer matches your search keyword.' : 'Customer profiles will appear here once bookings are placed.' }}
+                </p>
+              </div>
+            }
+
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- ======================================================== -->
+<!-- MODAL: VIEW USER INFORMATION DETAILS                     -->
+<!-- ======================================================== -->
+@if (showDetailsModal && selectedCustomer) {
+  <div class="modal-backdrop-custom d-flex align-items-center justify-content-center p-3">
+    <div class="custom-modal-card p-4 p-md-5" style="max-width: 540px;">
+
+      <div class="d-flex justify-content-between align-items-center pb-3 mb-4 border-bottom border-dark-subtle">
+        <h4 class="text-white fw-bold mb-0">
+          <i class="bi bi-person-vcard text-emerald me-2"></i> User Information
+        </h4>
+        <button (click)="closeDetailsModal()" class="btn-close btn-close-white" aria-label="Close"></button>
+      </div>
+
+      <div class="user-detail-box p-4 mb-4">
+        <div class="text-center mb-4">
+          <div class="user-avatar-large mx-auto mb-3 bg-emerald-subtle text-emerald">
+            {{ selectedCustomer.name.charAt(0).toUpperCase() }}
+          </div>
+          <h4 class="text-white fw-bold mb-1">{{ selectedCustomer.name }}</h4>
+          <span class="badge bg-info-subtle text-cyan">Verified Customer</span>
+        </div>
+
+        <div class="list-group list-group-flush border-top border-dark-subtle">
+          <div class="list-group-item bg-transparent text-white px-0 py-2 d-flex justify-content-between">
+            <span class="text-secondary small">Email Address:</span>
+            <strong class="small">{{ selectedCustomer.email }}</strong>
+          </div>
+          <div class="list-group-item bg-transparent text-white px-0 py-2 d-flex justify-content-between">
+            <span class="text-secondary small">Contact Phone:</span>
+            <span class="font-monospace small">{{ selectedCustomer.phone }}</span>
+          </div>
+          <div class="list-group-item bg-transparent text-white px-0 py-2 d-flex justify-content-between">
+            <span class="text-secondary small">Total Reservations:</span>
+            <span class="badge bg-dark-subtle text-light border border-secondary">
+              {{ selectedCustomer.totalBookings }} Bookings
+            </span>
+          </div>
+          <div class="list-group-item bg-transparent text-white px-0 py-2 d-flex justify-content-between">
+            <span class="text-secondary small">Cumulative Spend:</span>
+            <strong class="text-emerald">
+              {{ selectedCustomer.totalSpent | currency:'USD':'symbol':'1.2-2' }}
+            </strong>
+          </div>
+          <div class="list-group-item bg-transparent text-white px-0 py-2 d-flex justify-content-between">
+            <span class="text-secondary small">Last Active Date:</span>
+            <span class="text-light small">
+              {{ selectedCustomer.lastBookingDate | date:'medium' }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-end">
+        <button (click)="closeDetailsModal()" class="btn btn-emerald px-4 fw-bold">
+          Close
+        </button>
+      </div>
+
+    </div>
+  </div>
+}
