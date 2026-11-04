@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Show } from '../models/show';
+import { Show, CreateShowDto, UpdateShowDto } from '../models/show';
 import { ShowSeatAvailabilitySummary } from '../models/seat';
 
 @Injectable({
@@ -36,5 +36,20 @@ export class ShowService {
   // Get interactive seat availability summary for a show
   getSeatAvailability(showId: number): Observable<ShowSeatAvailabilitySummary> {
     return this.http.get<ShowSeatAvailabilitySummary>(`${this.apiUrl}/${showId}/availability`);
+  }
+
+  // Create a new show schedule (Admin)
+  createShow(dto: CreateShowDto): Observable<Show> {
+    return this.http.post<Show>(this.apiUrl, dto);
+  }
+
+  // Update show schedule / price (Admin)
+  updateShow(id: number, dto: UpdateShowDto): Observable<{ message: string }> {
+    return this.http.put<{ message: string }>(`${this.apiUrl}/${id}`, dto);
+  }
+
+  // Delete a show schedule (Admin)
+  deleteShow(id: number): Observable<{ message: string }> {
+    return this.http.delete<{ message: string }>(`${this.apiUrl}/${id}`);
   }
 }

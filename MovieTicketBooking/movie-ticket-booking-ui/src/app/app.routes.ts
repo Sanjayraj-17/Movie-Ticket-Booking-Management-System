@@ -11,6 +11,7 @@ import { AdminDashboardComponent } from './pages/admin/admin-dashboard/admin-das
 import { AdminMoviesComponent } from './pages/admin/admin-movies/admin-movies.component';
 import { AdminTheatresComponent } from './pages/admin/admin-theatres/admin-theatres.component';
 import { AdminScreensComponent } from './pages/admin/admin-screens/admin-screens.component';
+import { AdminShowsComponent } from './pages/admin/admin-shows/admin-shows.component';
 import { adminGuard } from './guards/admin.guard';
 
 export const routes: Routes = [
@@ -86,6 +87,12 @@ export const routes: Routes = [
     component: AdminScreensComponent,
     canActivate: [adminGuard],
     title: 'MovieBook - Admin Screen & Seat Management'
+  },
+  {
+    path: 'admin/shows',
+    component: AdminShowsComponent,
+    canActivate: [adminGuard],
+    title: 'MovieBook - Admin Show Management'
   },
   {
     path: '**',

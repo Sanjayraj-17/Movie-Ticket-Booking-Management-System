@@ -12,3 +12,17 @@ export interface Show {
   price: number;
   totalSeats: number;
 }
+
+export interface CreateShowDto {
+  movieId: number;
+  screenId: number;
+  startTime: string;
+  endTime: string;
+  price: number;
+}
+
+export interface UpdateShowDto {
+  startTime: string;
+  endTime: string;
+  price: number;
+}
