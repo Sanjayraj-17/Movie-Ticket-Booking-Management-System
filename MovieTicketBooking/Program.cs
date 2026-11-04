@@ -20,6 +20,17 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
+// Enable CORS for Angular frontend
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngularApp", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 // 2. Configure SQL Server Database
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
@@ -164,7 +175,7 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference();
 }
 
-app.UseHttpsRedirection();
+app.UseCors("AllowAngularApp");
 
 // Authentication must run before Authorization
 app.UseAuthentication();
