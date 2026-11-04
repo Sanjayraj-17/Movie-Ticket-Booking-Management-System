@@ -31,7 +31,8 @@ namespace MovieTicketBooking.Services
                     Language = movie.Language,
                     Genre = movie.Genre,
                     DurationInMinutes = movie.DurationInMinutes,
-                    ReleaseDate = movie.ReleaseDate
+                    ReleaseDate = movie.ReleaseDate,
+                    PosterUrl = movie.PosterUrl
                 });
             }
 
@@ -55,7 +56,8 @@ namespace MovieTicketBooking.Services
                 Language = movie.Language,
                 Genre = movie.Genre,
                 DurationInMinutes = movie.DurationInMinutes,
-                ReleaseDate = movie.ReleaseDate
+                ReleaseDate = movie.ReleaseDate,
+                PosterUrl = movie.PosterUrl
             };
         }
 
@@ -81,7 +83,8 @@ namespace MovieTicketBooking.Services
                 Language = createDto.Language,
                 Genre = createDto.Genre,
                 DurationInMinutes = createDto.DurationInMinutes,
-                ReleaseDate = createDto.ReleaseDate
+                ReleaseDate = createDto.ReleaseDate,
+                PosterUrl = createDto.PosterUrl ?? string.Empty
             };
 
             var createdMovie = await _movieRepository.AddMovieAsync(movie);
@@ -95,7 +98,8 @@ namespace MovieTicketBooking.Services
                 Language = createdMovie.Language,
                 Genre = createdMovie.Genre,
                 DurationInMinutes = createdMovie.DurationInMinutes,
-                ReleaseDate = createdMovie.ReleaseDate
+                ReleaseDate = createdMovie.ReleaseDate,
+                PosterUrl = createdMovie.PosterUrl
             };
         }
 
@@ -125,6 +129,10 @@ namespace MovieTicketBooking.Services
             existingMovie.Genre = updateDto.Genre;
             existingMovie.DurationInMinutes = updateDto.DurationInMinutes;
             existingMovie.ReleaseDate = updateDto.ReleaseDate;
+            if (!string.IsNullOrEmpty(updateDto.PosterUrl))
+            {
+                existingMovie.PosterUrl = updateDto.PosterUrl;
+            }
 
             await _movieRepository.UpdateMovieAsync(existingMovie);
             return true;
@@ -159,7 +167,8 @@ namespace MovieTicketBooking.Services
                     Language = movie.Language,
                     Genre = movie.Genre,
                     DurationInMinutes = movie.DurationInMinutes,
-                    ReleaseDate = movie.ReleaseDate
+                    ReleaseDate = movie.ReleaseDate,
+                    PosterUrl = movie.PosterUrl
                 });
             }
 

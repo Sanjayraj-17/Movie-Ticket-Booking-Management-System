@@ -1,0 +1,147 @@
+.my-bookings-page {
+  min-height: calc(100vh - 160px);
+  background: #080b12;
+  color: #ffffff;
+}
+
+.text-emerald {
+  color: #10b981 !important;
+}
+
+.btn-emerald {
+  background: #10b981;
+  color: #ffffff;
+  border: none;
+  font-weight: 700;
+  border-radius: 10px;
+  padding: 10px 20px;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+
+  &:hover {
+    background: #059669;
+    color: #ffffff;
+    transform: translateY(-2px);
+  }
+}
+
+// Page Header
+.page-header {
+  .header-label {
+    font-size: 12px;
+    letter-spacing: 2px;
+    font-weight: 700;
+  }
+
+  .page-title {
+    font-size: clamp(28px, 4vw, 38px);
+    font-weight: 800;
+  }
+}
+
+// Tabs Bar
+.tabs-bar {
+  background: #0b1120;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+
+  .tab-btn {
+    background: transparent;
+    border: 1px solid transparent;
+    color: #94a3b8;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+
+    &:hover {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    &.active {
+      background: rgba(16, 185, 129, 0.15);
+      color: #10b981;
+      border-color: rgba(16, 185, 129, 0.3);
+
+      .tab-count-badge {
+        background: #10b981;
+        color: #ffffff;
+      }
+    }
+
+    .tab-count-badge {
+      background: #1e293b;
+      color: #94a3b8;
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 10px;
+      margin-left: 6px;
+    }
+  }
+}
+
+// Booking Item Card
+.booking-item-card {
+  background: #0b1120;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: rgba(16, 185, 129, 0.35);
+  }
+
+  .ticket-ref-badge {
+    font-size: 12px;
+    letter-spacing: 0.5px;
+  }
+
+  .booking-movie-title {
+    font-size: 20px;
+    font-weight: 700;
+  }
+
+  .seat-chip {
+    background: rgba(16, 185, 129, 0.12);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+}
+
+// Status Badges
+.status-badge {
+  font-size: 12px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-weight: 700;
+
+  &.confirmed {
+    background: rgba(16, 185, 129, 0.18);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.4);
+  }
+
+  &.completed {
+    background: rgba(59, 130, 246, 0.18);
+    color: #60a5fa;
+    border: 1px solid rgba(59, 130, 246, 0.3);
+  }
+
+  &.cancelled {
+    background: rgba(239, 68, 68, 0.18);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+  }
+}
+
+.empty-state-box {
+  background: #0b1120;
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+}

@@ -9,6 +9,8 @@ namespace MovieTicketBooking.Models
         // Movie title (e.g., "Inception")
         public string Title { get; set; } = string.Empty;
 
+        public string PosterUrl { get; set; } = string.Empty;
+
         // Brief synopsis or plot summary
         public string Description { get; set; } = string.Empty;
 

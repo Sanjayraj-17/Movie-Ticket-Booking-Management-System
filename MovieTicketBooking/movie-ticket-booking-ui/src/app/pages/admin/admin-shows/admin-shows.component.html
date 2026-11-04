@@ -1,0 +1,474 @@
+<div class="admin-page-wrapper py-4">
+  <div class="container-fluid px-lg-5">
+
+    <!-- System Alerts -->
+    @if (errorMessage) {
+      <div class="alert alert-danger bg-danger-subtle border-0 text-danger-emphasis mb-4 alert-dismissible fade show">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ errorMessage }}
+        <button type="button" class="btn-close" (click)="errorMessage = ''"></button>
+      </div>
+    }
+
+    @if (successMessage) {
+      <div class="alert alert-success bg-success-subtle border-0 text-success-emphasis mb-4 alert-dismissible fade show">
+        <i class="bi bi-check-circle-fill me-2"></i>{{ successMessage }}
+        <button type="button" class="btn-close" (click)="successMessage = ''"></button>
+      </div>
+    }
+
+    <div class="row g-4">
+
+      <!-- Left Navigation Sidebar -->
+      <div class="col-lg-3 col-xl-2">
+        <div class="admin-sidebar p-3">
+          <div class="admin-brand-box pb-3 mb-3 border-bottom border-dark-subtle">
+            <span class="badge admin-role-badge mb-1">
+              <i class="bi bi-shield-shaded me-1"></i> ADMIN PORTAL
+            </span>
+            <h5 class="text-white fw-bold mb-0">Management</h5>
+          </div>
+
+          <ul class="nav flex-column admin-nav-list gap-1">
+            <li class="nav-item">
+              <a routerLink="/admin/dashboard" class="nav-link">
+                <i class="bi bi-speedometer2 me-2"></i> Dashboard Overview
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a routerLink="/admin/movies" class="nav-link">
+                <i class="bi bi-film me-2"></i> Movie Management
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a routerLink="/admin/theatres" class="nav-link">
+                <i class="bi bi-buildings me-2"></i> Theatre Management
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a routerLink="/admin/screens" class="nav-link">
+                <i class="bi bi-tv me-2"></i> Screen Management
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a routerLink="/admin/shows" class="nav-link active">
+                <i class="bi bi-calendar-event me-2"></i> Show Management
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a routerLink="/admin/bookings" class="nav-link">
+                <i class="bi bi-ticket-perforated me-2"></i> Booking Management
+              </a>
+            </li>
+          
+            <li class="nav-item">
+              <a routerLink="/admin/users" class="nav-link">
+                <i class="bi bi-people me-2"></i> User Management
+              </a>
+            </li>
+          </ul>
+
+          <div class="admin-profile-box pt-4 mt-4 border-top border-dark-subtle">
+            <div class="small text-secondary mb-1">Signed in as:</div>
+            <strong class="text-white d-block small mb-3 text-truncate">{{ authService.currentUser()?.email }}</strong>
+            <a routerLink="/" class="btn btn-outline-secondary btn-sm w-100">
+              <i class="bi bi-arrow-left me-1"></i> Public Site
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Main Content Area -->
+      <div class="col-lg-9 col-xl-10">
+        <div class="admin-content-area">
+
+          <!-- Top Control Header Bar -->
+          <div class="content-header-card p-4 mb-4">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+              <div>
+                <h2 class="text-white fw-bold mb-1">Show Schedule Management</h2>
+                <p class="text-secondary small mb-0">
+                  Schedule screening times, assign movies to cinema screens, and configure base seat prices.
+                </p>
+              </div>
+
+              <div class="d-flex gap-2">
+                <button (click)="loadShows()" class="btn btn-outline-secondary btn-sm" [disabled]="isLoading" title="Refresh">
+                  <i class="bi bi-arrow-clockwise me-1"></i> Refresh
+                </button>
+                <button (click)="openAddModal()" class="btn btn-emerald btn-sm px-3 fw-bold">
+                  <i class="bi bi-plus-lg me-1"></i> Schedule New Show
+                </button>
+              </div>
+            </div>
+
+            <!-- Filter Controls Grid -->
+            <div class="row g-3 mt-3 pt-3 border-top border-dark-subtle align-items-center">
+              <div class="col-md-3">
+                <div class="input-group">
+                  <span class="input-group-text search-icon"><i class="bi bi-search"></i></span>
+                  <input
+                    type="text"
+                    class="form-control search-input"
+                    placeholder="Search shows..."
+                    [(ngModel)]="searchQuery"
+                    (input)="applyFilter()">
+                </div>
+              </div>
+
+              <div class="col-sm-6 col-md-3">
+                <select class="form-select filter-select" [(ngModel)]="selectedMovieId" (change)="applyFilter()">
+                  <option value="All">All Movies</option>
+                  @for (m of movies; track m.id) {
+                    <option [value]="m.id">{{ m.title }}</option>
+                  }
+                </select>
+              </div>
+
+              <div class="col-sm-6 col-md-3">
+                <select class="form-select filter-select" [(ngModel)]="selectedTheatreId" (change)="applyFilter()">
+                  <option value="All">All Theatres</option>
+                  @for (t of theatres; track t.id) {
+                    <option [value]="t.id">{{ t.name }}</option>
+                  }
+                </select>
+              </div>
+
+              <div class="col-sm-6 col-md-3">
+                <input
+                  type="date"
+                  class="form-control filter-select"
+                  [(ngModel)]="selectedDate"
+                  (change)="applyFilter()">
+              </div>
+            </div>
+          </div>
+
+          <!-- Shows Table Card -->
+          <div class="table-container-card p-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h5 class="text-white fw-bold mb-0">Active Screenings</h5>
+              <span class="badge bg-dark-subtle text-light border border-secondary px-3 py-2">
+                Showing {{ filteredShows.length }} of {{ shows.length }} Shows
+              </span>
+            </div>
+
+            @if (isLoading) {
+              <div class="text-center py-5">
+                <div class="spinner-border text-emerald"></div>
+                <p class="text-secondary mt-3 mb-0">Fetching show schedules from database...</p>
+              </div>
+            } @else if (filteredShows.length > 0) {
+              <div class="table-responsive">
+                <table class="table admin-show-table align-middle">
+                  <thead>
+                    <tr>
+                      <th style="width: 75px;">ID</th>
+                      <th>Movie</th>
+                      <th>Cinema & Screen</th>
+                      <th>Show Date & Time</th>
+                      <th>Duration / End</th>
+                      <th>Base Price</th>
+                      <th class="text-end">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (s of filteredShows; track s.id) {
+                      <tr>
+                        <!-- ID -->
+                        <td class="fw-bold text-emerald">#{{ s.id }}</td>
+
+                        <!-- Movie Title -->
+                        <td>
+                          <strong class="text-white d-block fs-6">{{ s.movieTitle }}</strong>
+                          <small class="text-secondary">ID #{{ s.movieId }}</small>
+                        </td>
+
+                        <!-- Theatre & Screen -->
+                        <td>
+                          <span class="text-light d-block">{{ s.theatreName }}</span>
+                          <span class="badge bg-dark-subtle text-cyan border border-info-subtle">
+                            <i class="bi bi-tv me-1"></i>{{ s.screenName }}
+                          </span>
+                        </td>
+
+                        <!-- Start Date & Time -->
+                        <td>
+                          <strong class="text-white d-block">
+                            {{ s.startTime | date:'EEE, MMM d, y' }}
+                          </strong>
+                          <span class="badge bg-emerald-subtle text-emerald">
+                            <i class="bi bi-clock me-1"></i>{{ s.startTime | date:'shortTime' }}
+                          </span>
+                        </td>
+
+                        <!-- End Time -->
+                        <td>
+                          <span class="text-secondary small d-block">Ends at</span>
+                          <span class="text-light small">
+                            {{ s.endTime | date:'shortTime' }}
+                          </span>
+                        </td>
+
+                        <!-- Base Price -->
+                        <td>
+                          <strong class="text-emerald fs-6">
+                            {{ s.price | currency:'USD':'symbol':'1.2-2' }}
+                          </strong>
+                        </td>
+
+                        <!-- Actions -->
+                        <td class="text-end">
+                          <div class="btn-group btn-group-sm">
+                            <a [routerLink]="['/booking/seats', s.id]" class="btn btn-outline-info" title="Preview Seat Chart">
+                              <i class="bi bi-grid-3x3"></i>
+                            </a>
+                            <button (click)="openEditModal(s)" class="btn btn-outline-warning" title="Edit Show Times/Price">
+                              <i class="bi bi-pencil-square"></i>
+                            </button>
+                            <button (click)="confirmDelete(s)" class="btn btn-outline-danger" title="Delete Show">
+                              <i class="bi bi-trash3"></i>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            } @else {
+              <div class="empty-state text-center py-5">
+                <i class="bi bi-calendar-x display-4 text-secondary mb-3 d-block"></i>
+                <h5 class="text-white">No Shows Found</h5>
+                <p class="text-secondary small mb-3">
+                  {{ searchQuery || selectedDate || selectedMovieId !== 'All' ? 'No shows match your filter criteria.' : 'No screenings have been scheduled yet.' }}
+                </p>
+                <button (click)="openAddModal()" class="btn btn-emerald btn-sm">
+                  <i class="bi bi-plus-lg me-1"></i> Schedule First Show
+                </button>
+              </div>
+            }
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- ======================================================== -->
+<!-- MODAL: ADD / EDIT SHOW                                   -->
+<!-- ======================================================== -->
+@if (showModal) {
+  <div class="modal-backdrop-custom d-flex align-items-center justify-content-center p-3">
+    <div class="custom-modal-card p-4 p-md-5" style="max-width: 620px;">
+
+      <div class="d-flex justify-content-between align-items-center pb-3 mb-4 border-bottom border-dark-subtle">
+        <h4 class="text-white fw-bold mb-0">
+          <i class="bi" [ngClass]="isEditMode ? 'bi-pencil-square text-warning' : 'bi-calendar-plus text-emerald'"></i>
+          {{ isEditMode ? 'Edit Show Schedule' : 'Schedule New Screening' }}
+        </h4>
+        <button (click)="closeModal()" class="btn-close btn-close-white" aria-label="Close"></button>
+      </div>
+
+      <form (ngSubmit)="saveShow()">
+
+        <!-- Case 1: Add New Show -->
+        @if (!isEditMode) {
+          <!-- Movie Selection -->
+          <div class="mb-3">
+            <label class="form-label text-secondary small fw-bold">Select Movie *</label>
+            <select
+              class="form-select filter-select"
+              [(ngModel)]="showForm.movieId"
+              name="movieId"
+              (change)="onMovieOrStartTimeChange()"
+              required>
+              @for (m of movies; track m.id) {
+                <option [value]="m.id">{{ m.title }} ({{ m.durationInMinutes }}m - {{ m.language }})</option>
+              }
+            </select>
+          </div>
+
+          <!-- Theatre & Screen Selection -->
+          <div class="row g-2 mb-3">
+            <div class="col-sm-6">
+              <label class="form-label text-secondary small fw-bold">Cinema Theatre *</label>
+              <select
+                class="form-select filter-select"
+                [(ngModel)]="showForm.theatreId"
+                name="theatreId"
+                (change)="onTheatreChangeInModal()"
+                required>
+                @for (t of theatres; track t.id) {
+                  <option [value]="t.id">{{ t.name }}</option>
+                }
+              </select>
+            </div>
+
+            <div class="col-sm-6">
+              <label class="form-label text-secondary small fw-bold">Auditorium Screen *</label>
+              <select
+                class="form-select filter-select"
+                [(ngModel)]="showForm.screenId"
+                name="screenId"
+                required>
+                @for (sc of theatreScreensForModal; track sc.id) {
+                  <option [value]="sc.id">{{ sc.screenName }} ({{ sc.totalSeats }} Seats)</option>
+                }
+              </select>
+              @if (theatreScreensForModal.length === 0) {
+                <small class="text-danger d-block mt-1">No screens found in this theatre.</small>
+              }
+            </div>
+          </div>
+
+          <!-- Start & End Date Time -->
+          <div class="row g-2 mb-3">
+            <div class="col-sm-6">
+              <label class="form-label text-secondary small fw-bold">Start Time *</label>
+              <input
+                type="datetime-local"
+                class="form-control admin-input"
+                [(ngModel)]="showForm.startTime"
+                name="startTime"
+                (change)="onMovieOrStartTimeChange()"
+                required>
+            </div>
+
+            <div class="col-sm-6">
+              <label class="form-label text-secondary small fw-bold">End Time *</label>
+              <input
+                type="datetime-local"
+                class="form-control admin-input"
+                [(ngModel)]="showForm.endTime"
+                name="endTime"
+                required>
+            </div>
+          </div>
+
+          <!-- Base Ticket Price -->
+          <div class="mb-4">
+            <label class="form-label text-secondary small fw-bold">Base Ticket Price ($ USD) *</label>
+            <div class="input-group">
+              <span class="input-group-text modal-icon"><i class="bi bi-currency-dollar"></i></span>
+              <input
+                type="number"
+                step="0.5"
+                min="1"
+                class="form-control admin-input"
+                [(ngModel)]="showForm.price"
+                name="price"
+                required>
+            </div>
+            <small class="text-secondary d-block mt-1">
+              VIP and Premium seats will automatically scale from this base price.
+            </small>
+          </div>
+        }
+
+        <!-- Case 2: Edit Show Times / Price -->
+        @else {
+          <div class="mb-3 p-3 edit-info-box">
+            <strong class="text-white d-block fs-6 mb-1">{{ editingShowInfo?.movieTitle }}</strong>
+            <span class="text-secondary small">
+              {{ editingShowInfo?.theatreName }} • {{ editingShowInfo?.screenName }}
+            </span>
+          </div>
+
+          <div class="row g-2 mb-3">
+            <div class="col-sm-6">
+              <label class="form-label text-secondary small fw-bold">Start Time *</label>
+              <input
+                type="datetime-local"
+                class="form-control admin-input"
+                [(ngModel)]="editForm.startTime"
+                name="editStartTime"
+                required>
+            </div>
+
+            <div class="col-sm-6">
+              <label class="form-label text-secondary small fw-bold">End Time *</label>
+              <input
+                type="datetime-local"
+                class="form-control admin-input"
+                [(ngModel)]="editForm.endTime"
+                name="editEndTime"
+                required>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label text-secondary small fw-bold">Base Ticket Price ($ USD) *</label>
+            <div class="input-group">
+              <span class="input-group-text modal-icon"><i class="bi bi-currency-dollar"></i></span>
+              <input
+                type="number"
+                step="0.5"
+                min="1"
+                class="form-control admin-input"
+                [(ngModel)]="editForm.price"
+                name="editPrice"
+                required>
+            </div>
+          </div>
+        }
+
+        <!-- Actions -->
+        <div class="d-flex justify-content-end gap-2 pt-3 border-top border-dark-subtle">
+          <button type="button" (click)="closeModal()" class="btn btn-outline-secondary px-4">
+            Cancel
+          </button>
+          <button type="submit" class="btn btn-emerald px-4 fw-bold" [disabled]="isSaving">
+            @if (isSaving) {
+              <span class="spinner-border spinner-border-sm me-2"></span> Saving...
+            } @else {
+              <i class="bi" [ngClass]="isEditMode ? 'bi-check-lg' : 'bi-plus-lg'"></i>
+              {{ isEditMode ? 'Save Changes' : 'Schedule Show' }}
+            }
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+}
+
+<!-- ======================================================== -->
+<!-- MODAL: DELETE CONFIRMATION SHOW                          -->
+<!-- ======================================================== -->
+@if (showToDelete) {
+  <div class="modal-backdrop-custom d-flex align-items-center justify-content-center p-3">
+    <div class="custom-modal-card p-4 text-center" style="max-width: 440px;">
+      <div class="delete-icon-box mb-3">
+        <i class="bi bi-trash3-fill"></i>
+      </div>
+      <h5 class="text-white fw-bold mb-2">Delete Show Schedule?</h5>
+      <p class="text-secondary small mb-4">
+        Are you sure you want to delete screening <strong class="text-white">#{{ showToDelete.id }}</strong>
+        for <strong class="text-white">"{{ showToDelete.movieTitle }}"</strong> at
+        {{ showToDelete.theatreName }} ({{ showToDelete.screenName }})?
+      </p>
+
+      <div class="d-flex justify-content-center gap-2">
+        <button (click)="cancelDelete()" class="btn btn-outline-secondary px-4" [disabled]="isDeleting">
+          Cancel
+        </button>
+        <button (click)="executeDelete()" class="btn btn-danger px-4 fw-bold" [disabled]="isDeleting">
+          @if (isDeleting) {
+            <span class="spinner-border spinner-border-sm me-2"></span> Deleting...
+          } @else {
+            <i class="bi bi-trash3 me-1"></i> Confirm Delete
+          }
+        </button>
+      </div>
+    </div>
+  </div>
+}
+

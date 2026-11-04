@@ -1,0 +1,237 @@
+.admin-page-wrapper {
+  min-height: calc(100vh - 72px);
+  background: #080B12;
+  color: #FFFFFF;
+}
+
+// Left Admin Sidebar
+.admin-sidebar {
+  background: #0B1120;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  position: sticky;
+  top: 90px;
+
+  .admin-role-badge {
+    background: rgba(16, 185, 129, 0.15);
+    color: #10B981;
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+    padding: 0.35rem 0.6rem;
+    border-radius: 6px;
+  }
+
+  .admin-nav-list {
+    .nav-link {
+      color: rgba(255, 255, 255, 0.7);
+      padding: 0.75rem 1rem;
+      border-radius: 10px;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+
+      i {
+        font-size: 1.1rem;
+        color: rgba(255, 255, 255, 0.5);
+        transition: color 0.2s ease;
+      }
+
+      &:hover {
+        color: #FFFFFF;
+        background: rgba(255, 255, 255, 0.05);
+
+        i {
+          color: #10B981;
+        }
+      }
+
+      &.active {
+        background: rgba(16, 185, 129, 0.15);
+        color: #10B981;
+        font-weight: 600;
+
+        i {
+          color: #10B981;
+        }
+      }
+    }
+  }
+
+  .admin-profile-box {
+    border-color: rgba(255, 255, 255, 0.08) !important;
+  }
+}
+
+// Content Header Card
+.content-header-card {
+  background: #0B1120;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+
+  .search-icon {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-right: none;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .search-input {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #FFFFFF;
+
+    &:focus {
+      background: rgba(255, 255, 255, 0.07);
+      border-color: #10B981;
+      box-shadow: 0 0 0 0.25rem rgba(16, 185, 129, 0.2);
+      color: #FFFFFF;
+    }
+  }
+
+  .filter-select {
+    background-color: #0B1120;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #FFFFFF;
+
+    &:focus {
+      border-color: #10B981;
+      box-shadow: 0 0 0 0.25rem rgba(16, 185, 129, 0.2);
+    }
+  }
+}
+
+// Table Container Card
+.table-container-card {
+  background: #0B1120;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+
+  .admin-theatre-table {
+    margin-bottom: 0;
+    --bs-table-bg: transparent;
+    --bs-table-color: #FFFFFF;
+    --bs-table-border-color: rgba(255, 255, 255, 0.08);
+
+    thead th {
+      color: rgba(255, 255, 255, 0.5);
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 0.85rem 1rem;
+    }
+
+    tbody td {
+      padding: 0.95rem 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 0.88rem;
+    }
+
+    tbody tr:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+  }
+}
+
+// Theatre Avatar
+.theatre-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+
+// Colors
+.text-emerald {
+  color: #10B981 !important;
+}
+
+.bg-emerald-subtle {
+  background-color: rgba(16, 185, 129, 0.15) !important;
+}
+
+.btn-emerald {
+  background-color: #10B981;
+  color: #080B12;
+  border: none;
+  font-weight: 600;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: #059669;
+    color: #FFFFFF;
+    transform: translateY(-1px);
+  }
+}
+
+// Custom Modal Backdrop & Card
+.modal-backdrop-custom {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.82);
+  backdrop-filter: blur(6px);
+  z-index: 1050;
+  overflow-y: auto;
+}
+
+.custom-modal-card {
+  background: #0B1120;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  width: 100%;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
+  animation: modalFadeIn 0.2s ease-out;
+
+  .modal-icon {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-right: none;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .admin-input {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #FFFFFF;
+
+    &:focus {
+      background: rgba(255, 255, 255, 0.07);
+      border-color: #10B981;
+      box-shadow: 0 0 0 0.25rem rgba(16, 185, 129, 0.2);
+      color: #FFFFFF;
+    }
+  }
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+// Delete Icon Box
+.delete-icon-box {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: rgba(239, 68, 68, 0.15);
+  color: #EF4444;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  margin: 0 auto;
+}

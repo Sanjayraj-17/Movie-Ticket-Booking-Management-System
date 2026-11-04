@@ -1,0 +1,169 @@
+<div class="movie-details-page py-5">
+  <div class="container">
+
+    <!-- Back to Movies Breadcrumb -->
+    <div class="mb-4">
+      <a routerLink="/" class="back-link">
+        <i class="bi bi-arrow-left me-2"></i> Back to Now Showing
+      </a>
+    </div>
+
+    <!-- Loading State -->
+    @if (isLoading) {
+      <div class="text-center py-5">
+        <div class="spinner-border text-emerald"></div>
+        <p class="mt-3 text-secondary">Loading movie details...</p>
+      </div>
+    }
+
+    <!-- Error State -->
+    @else if (errorMessage || !movie) {
+      <div class="alert alert-danger bg-danger-subtle border-0 text-danger-emphasis py-4 text-center">
+        <i class="bi bi-exclamation-circle-fill fs-2 d-block mb-2"></i>
+        <h5>{{ errorMessage || 'Movie Not Found' }}</h5>
+        <p class="text-secondary mb-3">We couldn't retrieve the details for this movie.</p>
+        <a routerLink="/" class="btn book-action-btn">
+          <i class="bi bi-house-door me-1"></i> Return Home
+        </a>
+      </div>
+    }
+
+    <!-- Movie Details Content -->
+    @else {
+      <!-- Hero Detail Banner -->
+      <div class="movie-hero-card mb-5">
+        <div class="row g-4 align-items-center">
+
+          <!-- Left Column: Poster -->
+          <div class="col-md-4 col-lg-3 text-center">
+            <div class="poster-wrapper">
+              @if (movie.posterUrl) {
+                <img [src]="movie.posterUrl" [alt]="movie.title" class="poster-img">
+              } @else {
+                <div class="poster-placeholder">
+                  <i class="bi bi-film"></i>
+                </div>
+              }
+            </div>
+          </div>
+
+          <!-- Right Column: Meta Information -->
+          <div class="col-md-8 col-lg-9">
+            <div class="movie-meta-header">
+              <span class="genre-tag mb-2">{{ movie.genre }}</span>
+              <h1 class="movie-title">{{ movie.title }}</h1>
+
+              <!-- Quick Badges Row -->
+              <div class="meta-badges d-flex flex-wrap gap-2 my-3">
+                <span class="meta-badge">
+                  <i class="bi bi-translate text-emerald me-1"></i> {{ movie.language }}
+                </span>
+                <span class="meta-badge">
+                  <i class="bi bi-clock text-emerald me-1"></i> {{ movie.durationInMinutes }} mins
+                </span>
+                <span class="meta-badge">
+                  <i class="bi bi-calendar3 text-emerald me-1"></i> Released: {{ movie.releaseDate | date:'mediumDate' }}
+                </span>
+              </div>
+
+              <!-- Synopsis / Description -->
+              <div class="synopsis-box my-4">
+                <h6 class="text-uppercase text-secondary small fw-bold tracking-wider mb-2">Synopsis</h6>
+                <p class="synopsis-text">
+                  {{ movie.description || 'No description provided for this movie.' }}
+                </p>
+              </div>
+
+              <!-- Book Action Button -->
+              <div class="action-buttons d-flex flex-wrap gap-3 align-items-center">
+                <button (click)="scrollToShowtimes()" class="btn book-action-btn btn-lg">
+                  <i class="bi bi-ticket-perforated-fill me-2"></i> Book Tickets
+                </button>
+                <span class="text-secondary small">
+                  <i class="bi bi-shield-check text-emerald me-1"></i> Instant Digital Confirmation
+                </span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Available Theatres and Shows Section -->
+      <section class="showtimes-section" id="showtimes-section">
+        <div class="section-title-wrap d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom border-dark-subtle">
+          <div>
+            <span class="text-emerald small fw-bold text-uppercase tracking-wider">Showtimes</span>
+            <h3 class="mb-0 text-white">Available Theatres & Showtimes</h3>
+          </div>
+          <span class="badge bg-dark-subtle text-light border border-secondary px-3 py-2">
+            {{ shows.length }} Shows Available
+          </span>
+        </div>
+
+        @if (isLoadingShows) {
+          <div class="text-center py-4">
+            <div class="spinner-border text-emerald"></div>
+            <p class="text-secondary mt-2">Checking real-time theatre schedules...</p>
+          </div>
+        } @else if (theatreGroups.length > 0) {
+          <div class="d-flex flex-column gap-4">
+            @for (theatre of theatreGroups; track theatre.theatreId) {
+              <div class="theatre-schedule-card p-4">
+                <div class="theatre-header d-flex justify-content-between align-items-center mb-3">
+                  <div class="d-flex align-items-center gap-2">
+                    <div class="theatre-icon">
+                      <i class="bi bi-buildings-fill"></i>
+                    </div>
+                    <div>
+                      <h4 class="theatre-name mb-0">{{ theatre.theatreName }}</h4>
+                      <small class="text-secondary"><i class="bi bi-geo-alt me-1"></i> Cinema Partner</small>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Showtimes Grid -->
+                <div class="row g-3">
+                  @for (show of theatre.shows; track show.id) {
+                    <div class="col-sm-6 col-md-4 col-lg-3">
+                      <div class="showtime-card">
+                        <div class="showtime-top d-flex justify-content-between align-items-center mb-2">
+                          <span class="screen-label">{{ show.screenName }}</span>
+                          <span class="price-tag">{{ show.price | currency:'USD':'symbol':'1.2-2' }}</span>
+                        </div>
+
+                        <div class="showtime-time mb-3">
+                          <i class="bi bi-clock me-1 text-emerald"></i>
+                          <span class="time-text">{{ show.startTime | date:'shortTime' }}</span>
+                          <small class="d-block text-secondary mt-1">{{ show.startTime | date:'mediumDate' }}</small>
+                        </div>
+
+                        <a routerLink="/dashboard" class="btn select-show-btn w-100">
+                          <i class="bi bi-check2-circle me-1"></i> Select Show
+                        </a>
+                      </div>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        } @else {
+          <!-- Empty State: No Shows -->
+          <div class="no-shows-card p-5 text-center">
+            <i class="bi bi-calendar-x fs-1 text-secondary mb-3 d-block"></i>
+            <h4 class="text-light">No Shows Currently Scheduled</h4>
+            <p class="text-secondary max-w-md mx-auto mb-4">
+              There are currently no showtimes configured for <strong>{{ movie.title }}</strong>.
+              Please check back shortly or explore other featured movies.
+            </p>
+            <a routerLink="/" class="btn book-action-btn">
+              <i class="bi bi-arrow-left me-1"></i> Browse Other Movies
+            </a>
+          </div>
+        }
+      </section>
+    }
+
+  </div>
+</div>

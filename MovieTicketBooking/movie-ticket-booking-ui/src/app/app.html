@@ -1,0 +1,97 @@
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+  <div class="container">
+    <a class="navbar-brand fw-bold" routerLink="/">
+      <span class="brand-icon">M</span> MovieBook
+    </a>
+
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarMenu"
+      aria-controls="navbarMenu"
+      aria-expanded="false"
+      aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarMenu">
+      <ul class="navbar-nav mx-auto">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+            <i class="bi bi-house-door me-1"></i> Home
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/theatres" routerLinkActive="active">
+            <i class="bi bi-buildings me-1"></i> Theatres
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/shows" routerLinkActive="active">
+            <i class="bi bi-calendar-event me-1"></i> Shows
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/my-bookings" routerLinkActive="active">
+            <i class="bi bi-ticket-perforated me-1"></i> My Bookings
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/dashboard" routerLinkActive="active">
+            <i class="bi bi-speedometer2 me-1"></i> Dashboard
+          </a>
+        </li>
+
+        @if (authService.isAdmin()) {
+          <li class="nav-item">
+            <a class="nav-link text-warning fw-semibold" routerLink="/admin/dashboard" routerLinkActive="active">
+              <i class="bi bi-shield-shaded me-1"></i> Admin
+            </a>
+          </li>
+        }
+      </ul>
+
+      <div class="d-flex align-items-center gap-2">
+        @if (authService.currentUser(); as user) {
+          <div class="dropdown">
+            <a routerLink="/dashboard" class="btn user-chip d-flex align-items-center gap-2">
+              <i class="bi bi-person-circle fs-5 text-emerald"></i>
+              <span class="fw-semibold">{{ user.fullName }}</span>
+            </a>
+          </div>
+          <button (click)="onLogout()" class="btn btn-outline-danger btn-sm px-3" title="Logout">
+            <i class="bi bi-box-arrow-right"></i>
+          </button>
+        } @else {
+          <a routerLink="/dashboard" class="btn login-btn">
+            <i class="bi bi-box-arrow-in-right me-1"></i> Sign In
+          </a>
+        }
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Main Page Router Outlet -->
+<main>
+  <router-outlet></router-outlet>
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="container text-center">
+    <h4 class="footer-brand"><span class="brand-icon">M</span> MovieBook</h4>
+    <p class="footer-tagline">
+      Your favourite movies. Your perfect seats.
+    </p>
+    <p class="copyright">
+      © 2026 MovieBook. All rights reserved.
+    </p>
+  </div>
+</footer>

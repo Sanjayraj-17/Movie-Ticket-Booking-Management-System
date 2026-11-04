@@ -1,0 +1,141 @@
+.booking-confirmation-page {
+  min-height: calc(100vh - 160px);
+  background: #080b12;
+  color: #ffffff;
+}
+
+.text-emerald {
+  color: #10b981 !important;
+}
+
+.btn-emerald {
+  background: #10b981;
+  color: #ffffff;
+  border: none;
+  font-weight: 700;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+
+  &:hover:not(:disabled) {
+    background: #059669;
+    color: #ffffff;
+    transform: translateY(-2px);
+  }
+
+  &:disabled {
+    background: #1e293b;
+    color: #64748b;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+}
+
+// Digital Ticket Receipt Card
+.digital-ticket-card {
+  background: linear-gradient(135deg, #0e1a2f 0%, #0b1120 100%);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 20px;
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.55);
+
+  .success-icon {
+    font-size: 56px;
+    color: #10b981;
+    line-height: 1;
+  }
+
+  .status-badge.confirmed {
+    background: rgba(16, 185, 129, 0.18);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.4);
+    font-size: 12px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+
+  .ticket-headline {
+    font-size: clamp(24px, 3.5vw, 32px);
+    font-weight: 800;
+  }
+}
+
+// Barcode Graphic
+.ticket-barcode-wrap {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+
+  .barcode-lines {
+    height: 38px;
+    background: repeating-linear-gradient(
+      90deg,
+      #94a3b8 0px,
+      #94a3b8 2px,
+      transparent 2px,
+      transparent 5px,
+      #94a3b8 5px,
+      #94a3b8 8px,
+      transparent 8px,
+      transparent 12px,
+      #94a3b8 12px,
+      #94a3b8 15px
+    );
+    opacity: 0.75;
+  }
+}
+
+.seat-badge {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+// Cards in Pending State
+.form-card,
+.order-summary-card {
+  background: #0b1120;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+
+  .card-title {
+    font-size: 20px;
+    font-weight: 700;
+  }
+}
+
+.auth-icon {
+  background: #1e293b;
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #94a3b8;
+}
+
+.auth-input {
+  background: #1e293b;
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+
+  &:focus {
+    background: #1e293b;
+    border-color: #10b981;
+    color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.25);
+  }
+}
+
+.security-notice {
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: 10px;
+}
+
+.empty-state-box {
+  background: #0b1120;
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+}
