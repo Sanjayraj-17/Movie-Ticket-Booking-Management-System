@@ -1,3 +1,4 @@
+
 using Microsoft.EntityFrameworkCore;
 using MovieTicketBooking.Data;
 using MovieTicketBooking.Models;
@@ -5,7 +6,7 @@ using MovieTicketBooking.Repositories.Interfaces;
 
 namespace MovieTicketBooking.Repositories
 {
-    // Repository implementation for Booking operations using EF Core database transactions
+    // Repository implementation for Booking operations
     public class BookingRepository : IBookingRepository
     {
         private readonly ApplicationDbContext _context;
@@ -15,6 +16,7 @@ namespace MovieTicketBooking.Repositories
             _context = context;
         }
 
+        // GET ALL BOOKINGS (ADMIN)
         public async Task<List<Booking>> GetAllBookingsAsync()
         {
             return await _context.Bookings
@@ -29,6 +31,23 @@ namespace MovieTicketBooking.Repositories
                 .ToListAsync();
         }
 
+        // GET BOOKINGS BY CUSTOMER USER ID
+        public async Task<List<Booking>> GetBookingsByUserIdAsync(int userId)
+        {
+            return await _context.Bookings
+                .Where(b => b.UserId == userId)
+                .Include(b => b.Show)
+                    .ThenInclude(sh => sh.Movie)
+                .Include(b => b.Show)
+                    .ThenInclude(sh => sh.Screen)
+                        .ThenInclude(sc => sc.Theatre)
+                .Include(b => b.BookingSeats)
+                    .ThenInclude(bs => bs.Seat)
+                .OrderByDescending(b => b.BookingTime)
+                .ToListAsync();
+        }
+
+        // GET BOOKING BY ID
         public async Task<Booking?> GetBookingByIdAsync(int id)
         {
             return await _context.Bookings
@@ -42,13 +61,14 @@ namespace MovieTicketBooking.Repositories
                 .FirstOrDefaultAsync(b => b.Id == id);
         }
 
-        // Executes booking creation, seat items creation, and show-seat status update inside a database transaction
+        // CREATE BOOKING USING DATABASE TRANSACTION
         public async Task<Booking> CreateBookingWithTransactionAsync(
             Booking booking,
             List<BookingSeat> bookingSeats,
             List<ShowSeat> showSeatsToUpdate)
         {
-            using var transaction = await _context.Database.BeginTransactionAsync();
+            using var transaction =
+                await _context.Database.BeginTransactionAsync();
 
             try
             {
@@ -56,14 +76,15 @@ namespace MovieTicketBooking.Repositories
                 await _context.Bookings.AddAsync(booking);
                 await _context.SaveChangesAsync();
 
-                // 2. Assign foreign key BookingId to each booking seat
+                // 2. Assign BookingId to each BookingSeat
                 foreach (var bs in bookingSeats)
                 {
                     bs.BookingId = booking.Id;
                 }
+
                 await _context.BookingSeats.AddRangeAsync(bookingSeats);
 
-                // 3. Mark ShowSeat records as "Booked"
+                // 3. Mark selected ShowSeats as Booked
                 foreach (var ss in showSeatsToUpdate)
                 {
                     ss.Status = "Booked";
@@ -73,23 +94,25 @@ namespace MovieTicketBooking.Repositories
                 // 4. Save all changes
                 await _context.SaveChangesAsync();
 
-                // 5. Commit database transaction
+                // 5. Commit transaction
                 await transaction.CommitAsync();
 
                 return booking;
             }
             catch
             {
-                // Roll back any partial database writes if an error occurs
                 await transaction.RollbackAsync();
                 throw;
             }
         }
 
-        // Updates booking and corresponding ShowSeat records inside a database transaction
-        public async Task UpdateBookingWithTransactionAsync(Booking booking, List<ShowSeat> showSeatsToUpdate)
+        // UPDATE BOOKING USING DATABASE TRANSACTION
+        public async Task UpdateBookingWithTransactionAsync(
+            Booking booking,
+            List<ShowSeat> showSeatsToUpdate)
         {
-            using var transaction = await _context.Database.BeginTransactionAsync();
+            using var transaction =
+                await _context.Database.BeginTransactionAsync();
 
             try
             {
@@ -101,6 +124,7 @@ namespace MovieTicketBooking.Repositories
                 }
 
                 await _context.SaveChangesAsync();
+
                 await transaction.CommitAsync();
             }
             catch

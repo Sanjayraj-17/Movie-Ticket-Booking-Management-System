@@ -160,6 +160,14 @@ namespace MovieTicketBooking.Data
                       .WithMany(sh => sh.Bookings)
                       .HasForeignKey(b => b.ShowId)
                       .OnDelete(DeleteBehavior.Restrict);
+
+
+                // Relationship: User (1) -> Bookings (Many)
+                entity.HasOne(b => b.User)
+                      .WithMany()
+                      .HasForeignKey(b => b.UserId)
+                      .IsRequired(false)
+                      .OnDelete(DeleteBehavior.Restrict);
             });
 
             // ------------------------------------------
@@ -186,7 +194,10 @@ namespace MovieTicketBooking.Data
                       .WithMany(s => s.BookingSeats)
                       .HasForeignKey(bs => bs.SeatId)
                       .OnDelete(DeleteBehavior.Restrict);
+
+
             });
+
         }
     }
 }
